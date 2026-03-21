@@ -1,0 +1,98 @@
+{
+  "2e69636d65ed4e7f9724bdf1726fc94e": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:36:44.725997+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 4,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 4
+  },
+  "44092e518b924e9f92604090e0ae4fad": {
+    "accuracy": 0.5,
+    "last_result": "correct",
+    "last_review_flagged_at": "2026-03-11T23:03:13.385341+00:00",
+    "last_reviewed_at": "2026-03-15T17:35:09.159713+00:00",
+    "needs_review": false,
+    "priority_score": 6.5,
+    "times_correct": 2,
+    "times_incorrect": 2,
+    "times_review_again": 2,
+    "times_seen": 4
+  },
+  "710a4443ee7c47bd825a84d3d361d120": {
+    "accuracy": 0.5,
+    "last_result": "correct",
+    "last_review_flagged_at": "2026-03-11T23:03:17.899907+00:00",
+    "last_reviewed_at": "2026-03-15T17:36:18.172621+00:00",
+    "needs_review": false,
+    "priority_score": 6.5,
+    "times_correct": 2,
+    "times_incorrect": 2,
+    "times_review_again": 2,
+    "times_seen": 4
+  },
+  "7d577bf319e145198704897cdff1cf62": {
+    "accuracy": 0.5,
+    "last_result": "correct",
+    "last_review_flagged_at": "2026-03-11T23:03:07.971253+00:00",
+    "last_reviewed_at": "2026-03-15T17:35:43.418474+00:00",
+    "needs_review": false,
+    "priority_score": 6.5,
+    "times_correct": 2,
+    "times_incorrect": 2,
+    "times_review_again": 2,
+    "times_seen": 4
+  },
+  "b88de4ef817c4699b6e79be82e5c2c7d": {
+    "accuracy": 0.625,
+    "last_result": "correct",
+    "last_review_flagged_at": "2026-03-11T23:02:16.963450+00:00",
+    "last_reviewed_at": "2026-03-15T17:35:17.248232+00:00",
+    "needs_review": false,
+    "priority_score": 7.88,
+    "times_correct": 5,
+    "times_incorrect": 3,
+    "times_review_again": 1,
+    "times_seen": 8
+  },
+  "e05f65f35b0d4a059450d3104ab33bd6": {
+    "accuracy": 0.25,
+    "last_result": "review",
+    "last_review_flagged_at": "2026-03-15T17:36:37.884003+00:00",
+    "last_reviewed_at": "2026-03-15T17:36:37.884129+00:00",
+    "needs_review": true,
+    "priority_score": 7.75,
+    "times_correct": 1,
+    "times_incorrect": 2,
+    "times_review_again": 3,
+    "times_seen": 4
+  },
+  "fc4bd2bd8aca4bc9bdd7f4c6745dc618": {
+    "accuracy": 0.714,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:34:25.852530+00:00",
+    "needs_review": false,
+    "priority_score": 5.43,
+    "times_correct": 5,
+    "times_incorrect": 2,
+    "times_review_again": 0,
+    "times_seen": 7
+  },
+  "fed1ff1d8c4c4162a6885e844f6b646e": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:34:34.767680+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 3,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 3
+  }
+}

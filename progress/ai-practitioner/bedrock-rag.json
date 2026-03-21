@@ -1,0 +1,74 @@
+{
+  "0852cb35fc4d4dfb9d30b2e0ffe1513d": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:38:58.518780+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 1,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 1
+  },
+  "57f26e64d04a4c52a36f40da7ef35a9c": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:41:06.002030+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 1,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 1
+  },
+  "684d9ea9cc094595a872fb27291ab32f": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:41:17.084841+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 1,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 1
+  },
+  "79104316da7440fbb3adbdb0acb36dec": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:39:57.198162+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 1,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 1
+  },
+  "8df6a374b0c844c79fa3bb8cf45eab5b": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:40:15.032899+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 1,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 1
+  },
+  "dec9d1301e8b48aa8ce6a0f427767405": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-15T17:38:39.325847+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 1,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 1
+  }
+}

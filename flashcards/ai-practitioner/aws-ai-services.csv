@@ -1,0 +1,257 @@
+id,question,answer,topic,difficulty
+66b42549604044948a814fbd8ad3414b,What is Amazon Comprehend and what NLP capabilities does it provide?,"WHAT:
+
+Amazon Comprehend is a fully managed and serverless AWS service for Natural Language Processing (NLP).
+
+It uses machine learning to analyze text and extract meaning from documents.
+
+Key capabilities include:
+
+- Sentiment analysis (positive, negative, neutral)
+- Key phrase extraction
+- Topic modeling
+- Language detection
+- Named Entity Recognition (NER)
+
+NER identifies entities such as:
+
+- People
+- Organizations
+- Locations
+- Dates
+- Events
+
+WHY:
+
+Organizations use Comprehend to automatically understand large volumes of text.
+
+Common benefits include:
+
+- understanding customer feedback
+- analyzing emails or support tickets
+- organizing documents by topic
+- extracting important entities from text
+
+This helps businesses gain insights without building NLP models from scratch.
+
+HOW:
+
+Comprehend provides two main types of capabilities:
+
+Built-in NLP features:
+
+- sentiment detection
+- entity extraction
+- topic modeling
+- language detection
+
+Custom ML models:
+
+Custom Classification
+- train Comprehend to classify documents into categories
+
+Custom Entity Recognition
+- train Comprehend to detect domain-specific entities such as policy numbers or product IDs
+
+Training data is stored in Amazon S3 and used to train the model.
+
+Analysis can be:
+
+- real-time (synchronous)
+- batch processing (asynchronous)
+
+EXAMPLE:
+
+Customer support system:
+
+Incoming emails are analyzed by Comprehend.
+
+The service can:
+
+- detect sentiment (angry vs satisfied customer)
+- extract entities such as company names or dates
+- classify emails into categories such as billing, complaint, or support request
+
+This allows automatic ticket routing and faster support response.",aws-ai-services,Medium
+74b5f62dae6f478ca5e5abc357046e79,What is Amazon Rekognition and what capabilities does it provide for image and video analysis?,"WHAT:
+
+Amazon Rekognition is a fully managed AWS service that uses machine learning to analyze images and videos.
+
+It can automatically detect objects, people, text, scenes, and activities.
+
+Core capabilities include:
+
+- Object and scene detection
+- Face detection and facial analysis
+- Face search and face verification
+- Text detection in images
+- Celebrity recognition
+- Content moderation
+- Person or object tracking in video
+
+WHY:
+
+Rekognition allows applications to analyze visual media without building computer vision models.
+
+Typical use cases include:
+
+- user identity verification
+- analyzing photos and videos
+- detecting unsafe or inappropriate content
+- recognizing logos or products
+- analyzing sports footage or security cameras
+
+HOW:
+
+Rekognition provides several built-in machine learning capabilities.
+
+Face analysis
+- detects facial attributes such as age range, emotions, or whether eyes are open
+
+Face search and verification
+- compares faces against a stored face collection
+
+Content moderation
+- detects inappropriate or unsafe images
+
+Text detection
+- extracts text from images
+
+Custom Labels
+
+Developers can train Rekognition to detect their own objects such as company logos or products.
+
+Steps:
+
+- label training images
+- store images in Amazon S3
+- train a custom Rekognition model
+- detect those objects in new images
+
+EXAMPLE:
+
+A social media platform uploads user images.
+
+Amazon Rekognition can:
+
+- detect faces in photos
+- identify celebrities
+- extract text from images
+- detect unsafe content
+
+If unsafe content is detected, the system can block the image or send it for human review using Amazon Augmented AI (A2I).",aws-ai-services,Medium
+cecfb179bc6d4e058f909023d437b804,"What are SageMaker Data Wrangler and SageMaker Feature Store, and how are they used in machine learning workflows?","WHAT:
+
+SageMaker Data Wrangler is a tool used to prepare and transform data for machine learning.
+
+It supports:
+
+- data cleaning
+- data transformation
+- feature engineering
+- data visualization
+- data quality analysis
+
+SageMaker Feature Store is a centralized repository for storing and managing machine learning features.
+
+It allows teams to discover, reuse, and share features across ML models.
+
+WHY:
+
+Machine learning models depend heavily on high-quality data and well-designed features.
+
+These tools help teams:
+
+- prepare raw data for model training
+- create reusable features
+- improve collaboration across data science teams
+- ensure consistent features between training and inference
+
+HOW:
+
+Data Wrangler
+
+Used during the data preparation stage.
+
+Capabilities include:
+
+- importing datasets from sources such as Amazon S3
+- cleaning and transforming datasets
+- exploring data with visualizations
+- performing feature engineering
+- exporting data pipelines for automation
+
+Feature Store
+
+Stores features used by ML models.
+
+Key capabilities:
+
+- central catalog of company features
+- feature discovery in SageMaker Studio
+- consistent feature usage across training and inference
+- ingestion of features from Data Wrangler pipelines
+
+EXAMPLE:
+
+A company building a recommendation system prepares user data.
+
+Data Wrangler
+
+- cleans listening history data
+- transforms raw timestamps into useful features
+- generates numerical features such as listening duration
+
+Feature Store
+
+- stores these engineered features
+- allows multiple ML models to reuse the same features
+- ensures training and production systems use identical feature definitions",aws-ai-services,Medium
+7763ae464b13467bbcd6e535097eab49,What is SageMaker Feature Store and why is it important in machine learning workflows?,"WHAT:
+
+SageMaker Feature Store is a centralized repository used to store, manage, and share machine learning features.
+
+Features are the input variables used by machine learning models during training and inference.
+
+Examples of features include:
+
+- user age
+- product rating
+- listening duration
+- customer demographics
+
+WHY:
+
+High-quality features are critical for machine learning performance.
+
+Feature Store helps organizations:
+
+- reuse features across multiple models
+- maintain consistent features between training and inference
+- improve collaboration between data teams
+- manage features across many datasets
+
+HOW:
+
+Feature Store works as a centralized catalog for ML features.
+
+Key capabilities include:
+
+- storing features generated from different data sources
+- publishing features from SageMaker Data Wrangler
+- defining feature transformations
+- making features discoverable within SageMaker Studio
+
+Features can be reused across multiple machine learning projects.
+
+EXAMPLE:
+
+A music recommendation system generates features such as:
+
+- user listening duration
+- song rating
+- listener demographics
+
+These features are stored in SageMaker Feature Store.
+
+Multiple models (recommendation, churn prediction, personalization) can reuse the same features instead of recreating them.",aws-ai-services,Medium

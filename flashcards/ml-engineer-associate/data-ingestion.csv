@@ -1,0 +1,319 @@
+id,question,answer,topic,difficulty
+e4ff5c7d8db241cbb578c5db844bfd5e,"A company is designing a machine learning platform that needs to store large volumes of raw logs, support future ML experimentation, and also enable fast business reporting. Should they use a data warehouse, data lake, or data lakehouse, and why?","WHAT:
+- Data Warehouse: Stores structured, cleaned data using schema-on-write and ETL. Optimized for analytics and BI. Example tool: Amazon Redshift.
+- Data Lake: Stores raw structured, semi-structured, and unstructured data using schema-on-read and ELT. Optimized for machine learning and data exploration. Example tool: Amazon S3.
+- Data Lakehouse: Hybrid approach combining both. It supports raw data storage with analytics capabilities and warehouse-style querying. Example tools: AWS Lake Formation, Amazon S3, and Redshift Spectrum.
+
+WHY:
+- Data warehouses are best when the schema is known up front and fast, complex analytics queries are required.
+- Data lakes are best when storing large volumes of raw data for flexible future processing, machine learning, or discovery.
+- Data lakehouses are best when both analytics and machine learning are needed on the same underlying data.
+
+WHEN TO USE:
+- Data Warehouse: structured data, BI dashboards, fast SQL queries, Amazon Redshift
+- Data Lake: raw logs, ML experimentation, unknown future use cases, Amazon S3
+- Data Lakehouse: combined analytics + ML, mixed workloads, AWS Lake Formation + Amazon S3 + Redshift Spectrum
+
+EXAM TRAP:
+- Choosing a data warehouse for raw ML data by default
+- Forgetting schema-on-write vs schema-on-read
+- Forgetting ETL vs ELT
+- Assuming lakehouse is always the answer",data-ingestion,Medium
+8d5275338d9a4d2da393298707ce5f0a,"Which Amazon S3 bucket features should an ML Engineer know for data ingestion, storage optimization, data protection, security, and event-driven ML workflows?","WHAT:
+- Amazon S3 is object storage used to ingest, store, and protect any amount of data, including data lakes, ML datasets, logs, backups, and artifacts.
+- S3 stores objects in buckets and organizes them with prefixes and object tags.
+- Key S3 bucket features include versioning, lifecycle rules, storage classes, encryption, replication, event notifications, and access control using IAM and bucket policies.
+
+KEY FEATURES:
+- Versioning: Keeps multiple versions of an object so deleted or overwritten data can be restored.
+- Lifecycle rules: Automatically transition objects to cheaper storage classes or expire them.
+- Storage classes: Use S3 Standard, Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier Instant Retrieval, Glacier Flexible Retrieval, or Deep Archive depending on access pattern and cost needs.
+- Encryption: S3 automatically encrypts new objects at rest with SSE-S3 by default; other options (SSE-KMS, SSE-C) can also be configured.
+- Replication: Automatically replicates objects across buckets (same-region or cross-region) for redundancy, compliance, or disaster recovery.
+- Event notifications: Trigger downstream services (Lambda, SNS, SQS) on events like object creation for event-driven pipelines.
+- Security and access control:
+  - IAM policies: Control access at user/role level
+  - Bucket policies: Resource-based policies applied directly to buckets
+  - ACLs (less preferred): Legacy access control mechanism
+  - Block Public Access: Prevent accidental public exposure
+- Prefixes and tags: Help organize, manage, filter, and govern data in buckets.
+- Scalability and durability: S3 is designed for massive scale and is commonly used for data lakes and ML pipelines.
+
+WHY:
+- S3 is the foundation for data ingestion pipelines and data lakes in ML systems.
+- Versioning protects against accidental overwrite or deletion.
+- Lifecycle and storage classes reduce cost over time.
+- Replication improves resilience and cross-region availability.
+- Event notifications enable real-time ML pipelines (e.g., trigger preprocessing or inference).
+- IAM and bucket policies enforce secure access to sensitive ML data.
+- Encryption and bucket-level controls improve security and compliance.
+- Prefixes and tags help manage large datasets efficiently.
+
+WHEN TO USE:
+- Use S3 for ingesting raw data (logs, clickstreams, IoT, batch uploads)
+- Use S3 as the central data lake for ML pipelines
+- Use Versioning when data recovery and auditability matter
+- Use Lifecycle when data access patterns change over time
+- Use Intelligent-Tiering when access patterns are unknown
+- Use Replication for disaster recovery and multi-region architectures
+- Use Event Notifications for event-driven ingestion pipelines (e.g., trigger Lambda on upload)
+- Use IAM and Bucket Policies to control secure access to ML datasets
+- Use Glacier classes for archival data
+
+EXAM TRAP:
+- Treating S3 as only storage instead of a data ingestion foundation
+- Confusing IAM policies (identity-based) vs bucket policies (resource-based)
+- Forgetting Versioning protects against overwrite/delete
+- Forgetting Lifecycle is for transition/expiration, not query optimization
+- Forgetting Replication is async and requires versioning enabled
+- Forgetting Event Notifications enable event-driven ingestion pipelines
+- Leaving buckets publicly accessible accidentally
+- Confusing S3 (data lake) vs Redshift (data warehouse)",data-ingestion,Medium
+8da004610c1d470296f60d4c8c1f92b3,"How do Amazon S3 lifecycle rules optimize storage costs and data management in ML/data ingestion pipelines?","WHAT:
+- S3 lifecycle rules automate moving objects between storage classes and deleting them over time.
+- They help optimize cost by matching storage class with access patterns.
+
+KEY FEATURES:
+- Transition actions:
+  - Move objects between storage classes (e.g., Standard → Standard-IA → Glacier → Deep Archive)
+  - Example: Move to Standard-IA after 60 days, Glacier after 180 days
+- Expiration actions:
+  - Automatically delete objects after a defined time
+  - Delete old object versions (when versioning enabled)
+  - Remove incomplete multipart uploads
+- Scope control:
+  - Apply rules to entire bucket, specific prefixes (folders), or object tags
+- Version-aware lifecycle:
+  - Can transition or delete non-current (older) object versions
+
+WHY:
+- Reduces storage cost by moving infrequently accessed data to cheaper tiers
+- Automates data retention policies (e.g., logs, temporary data)
+- Supports ML pipelines where raw data → archive → delete lifecycle is common
+- Ensures compliance (data retention + cleanup)
+
+WHEN TO USE:
+- Logs and temporary data → expire after X days
+- ML raw data → move to Glacier after processing
+- Re-creatable data (e.g., thumbnails) → store in One Zone-IA and delete early
+- Versioned data → transition old versions to cheaper storage
+
+EXAMPLE SCENARIOS:
+- User images:
+  - Store in Standard → move to Glacier after 60 days
+- Thumbnails:
+  - Store in One Zone-IA → delete after 60 days
+- Deleted object recovery:
+  - Enable versioning → keep non-current versions
+  - Transition to Standard-IA → then Glacier Deep Archive
+
+OPTIMIZATION:
+- Use S3 Analytics:
+  - Generates daily reports with recommendations
+  - Helps decide when to transition to Standard-IA
+  - Outputs CSV reports after 24–48 hours
+
+EXAM TRAP:
+- Forgetting lifecycle rules can both transition AND delete
+- Confusing Standard-IA vs One Zone-IA (durability difference)
+- Forgetting versioning is required for non-current version lifecycle
+- Assuming all storage classes are recommended by S3 Analytics (it only supports Standard → Standard-IA)
+- Not using prefixes/tags to separate lifecycle strategies",data-ingestion,Medium
+ec20386368544a0e91ac70e9fdefaa55,"What are Amazon S3 storage classes, how do they differ, and when should each be used in ML/data ingestion systems?","WHAT:
+- S3 storage classes define how data is stored, accessed, and priced based on availability, durability, and access frequency.
+- They allow cost optimization by matching storage type with data access patterns.
+
+STORAGE CLASSES:
+- S3 Standard:
+  - Frequently accessed data
+  - High availability and durability
+  - Use for active datasets, ML training data
+
+- S3 Intelligent-Tiering:
+  - Automatically moves data between frequent and infrequent tiers
+  - No need to predict access patterns
+  - Use when access pattern is unknown
+
+- S3 Standard-IA (Infrequent Access):
+  - Lower cost than Standard
+  - Retrieval fee applies
+  - Use for data accessed less often but still needed quickly
+
+- S3 One Zone-IA:
+  - Stored in a single AZ (lower durability than others)
+  - Cheaper than Standard-IA
+  - Use for re-creatable data (e.g., thumbnails, temporary data)
+
+- S3 Glacier Instant Retrieval:
+  - Archive storage with millisecond retrieval
+  - Lower cost than IA
+  - Use for rarely accessed but immediately needed data
+
+- S3 Glacier Flexible Retrieval:
+  - Archive storage with minutes to hours retrieval time
+  - Lower cost than Instant Retrieval
+  - Use for backup and archive data
+
+- S3 Glacier Deep Archive:
+  - Lowest cost storage
+  - Retrieval takes hours (12+ hours)
+  - Use for long-term archival (compliance, old logs)
+
+KEY DIFFERENCES:
+- Access speed:
+  - Standard / IA → milliseconds
+  - Glacier → minutes to hours
+- Cost:
+  - Standard → highest
+  - Deep Archive → lowest
+- Durability:
+  - All high except One Zone-IA (single AZ)
+
+WHY:
+- Optimizes storage cost in ML pipelines
+- Matches data lifecycle (hot → warm → cold → archive)
+- Supports large-scale data ingestion and retention strategies
+
+WHEN TO USE:
+- Standard → active ML datasets, real-time applications
+- Intelligent-Tiering → unpredictable access patterns
+- Standard-IA → infrequently accessed but needed fast
+- One Zone-IA → temporary or reproducible data
+- Glacier tiers → backups, archives, compliance data
+
+EXAM TRAP:
+- Choosing One Zone-IA for critical data (risk of AZ loss)
+- Forgetting retrieval fees for IA classes
+- Using Glacier when instant access is required
+- Not using Intelligent-Tiering when access pattern is unknown
+- Confusing Standard vs Standard-IA use cases",data-ingestion,Medium
+00a52fdbabec44729f46e8693d8488e8,"What are Amazon EBS volumes, how do they work with EC2, and when should they be used in ML/data ingestion systems?","WHAT:
+- Amazon EBS (Elastic Block Store) is a network-attached block storage service for EC2 instances.
+- It provides persistent storage that can remain after an EC2 instance is terminated (if delete-on-termination is disabled).
+- EBS volumes act like network-based hard drives attached to EC2.
+
+KEY FEATURES:
+- Persistent storage:
+  - Data survives instance termination (unless delete-on-termination is enabled)
+- Single instance attachment (default):
+  - Typically attached to one EC2 instance at a time
+  - Multi-Attach supported for specific volume types (io1/io2)
+- AZ-bound:
+  - EBS volumes are created in a specific Availability Zone and must be attached within that AZ
+- Detachable and re-attachable:
+  - Can be detached from one EC2 and attached to another (useful for failover)
+- Provisioned capacity:
+  - You must define storage size (GB) and performance (IOPS) in advance
+- Multiple volumes:
+  - One EC2 instance can have multiple EBS volumes attached
+- Snapshots:
+  - Used to back up data and move volumes across AZs or regions
+- Delete on termination:
+  - Root volume is deleted by default
+  - Additional volumes are NOT deleted by default
+
+THROUGHPUT / PERFORMANCE:
+- gp2/gp3 (General Purpose SSD):
+  - Balanced price and performance
+  - gp3 allows independent tuning of IOPS and throughput (decoupled from size)
+- io1/io2 (Provisioned IOPS SSD):
+  - High-performance workloads requiring consistent IOPS
+  - Supports Multi-Attach
+- st1 (Throughput Optimized HDD):
+  - High throughput for large, sequential workloads
+  - Not suitable for low-latency use cases
+- sc1 (Cold HDD):
+  - Lowest cost storage
+  - For infrequently accessed data with low performance needs
+
+- Key concept:
+  - Performance is defined by:
+    - IOPS (operations per second)
+    - Throughput (MB/s)
+  - SSD → low latency
+  - HDD → high throughput, higher latency
+
+WHY:
+- Provides reliable and persistent storage for compute-based ML/data ingestion workloads
+- Supports stateful processing (e.g., batch jobs, preprocessing, temporary staging)
+- Enables recovery and failover via snapshots or re-attachment
+
+WHEN TO USE:
+- EC2-based data ingestion pipelines
+- Temporary staging of data before uploading to S3
+- ML preprocessing jobs running on EC2
+- Stateful applications requiring persistent disk
+- High-performance workloads needing low-latency block storage
+
+WHEN NOT TO USE:
+- Large-scale data lakes → use S3 instead
+- Shared storage across multiple instances → use EFS instead
+- Ultra-low latency local storage → use Instance Store
+- Serverless pipelines → use S3 / managed services
+
+EXAM TRAP:
+- Assuming EBS can be attached across AZs (it cannot)
+- Forgetting EBS is AZ-bound
+- Confusing EBS (block storage) with S3 (object storage)
+- Forgetting delete-on-termination behavior (root vs additional volumes)
+- Ignoring Multi-Attach support for io1/io2
+- Confusing IOPS vs throughput (SSD vs HDD use cases)
+- Using HDD (st1/sc1) for low-latency workloads
+- Not knowing gp3 allows independent tuning of performance
+- Thinking EBS scales automatically like S3",data-ingestion,Medium
+8811051e061c48588695e20d820efdf8,"What is Amazon EFS, how does it differ from EBS and S3, and when should it be used in ML/data ingestion systems?","WHAT:
+- Amazon EFS (Elastic File System) is a managed network file system (NFS) that can be mounted on multiple EC2 instances at the same time.
+- It provides shared, scalable, and fully managed file storage across multiple Availability Zones.
+
+KEY FEATURES:
+- Shared file system:
+  - Multiple EC2 instances can read/write simultaneously
+  - Works across multiple AZs
+- Fully managed and scalable:
+  - Automatically scales storage (no need to provision capacity)
+  - Pay-as-you-go pricing
+- Network-based storage:
+  - Uses NFS protocol
+  - Accessible via standard Linux file system interface (POSIX)
+- Multi-AZ availability:
+  - Highly available and fault-tolerant (regional service)
+- Performance modes:
+  - General Purpose → low latency (web apps, CMS)
+  - Max I/O → high throughput (big data, parallel workloads)
+- Throughput modes:
+  - Bursting → scales with storage size
+  - Provisioned → fixed throughput
+  - Elastic → auto-scales with workload
+- Storage classes:
+  - Standard → frequently accessed
+  - EFS-IA → infrequent access (lower cost, retrieval fee)
+  - Archive → rarely accessed data
+- Lifecycle policies:
+  - Automatically move files between tiers (e.g., Standard → IA)
+- Security:
+  - Controlled via security groups
+  - Supports encryption at rest (KMS)
+
+WHY:
+- Enables shared access to the same dataset across multiple compute nodes
+- Simplifies distributed ML workloads and data ingestion pipelines
+- Removes need for manual capacity planning
+- Provides high availability across AZs
+
+WHEN TO USE:
+- Shared file access across multiple EC2 instances
+- Distributed ML training or preprocessing
+- Web servers, CMS, content sharing systems
+- Workloads requiring POSIX file system
+
+WHEN NOT TO USE:
+- Large-scale data lakes → use S3
+- Single-instance high-performance storage → use EBS
+- Windows workloads → not supported (Linux only)
+
+EXAM TRAP:
+- Confusing EFS with EBS (EFS = shared, EBS = single instance)
+- Forgetting EFS works across AZs
+- Using EFS for object storage use cases (should use S3)
+- Forgetting EFS is Linux-only
+- Assuming you need to provision capacity (EFS auto-scales)",data-ingestion,Medium

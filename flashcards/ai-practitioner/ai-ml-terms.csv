@@ -1,0 +1,536 @@
+id,question,answer,topic,difficulty
+d5d0ed8d33a84267a811b0ab68c4dcf1,"What are the main purposes of common AI and machine learning models such as GPT, BERT, RNN, ResNet, SVM, WaveNet, GAN, and XGBoost?","WHAT:
+
+GPT (Generative Pre-trained Transformer)
+A generative language model used to produce human-like text or code from prompts.
+
+BERT (Bidirectional Encoder Representations from Transformers)
+A language model designed for understanding text by reading context in both directions.
+
+RNN (Recurrent Neural Network)
+A neural network architecture specialized for sequential data like text, speech, or time-series.
+
+ResNet (Residual Network)
+A deep convolutional neural network designed for computer vision tasks such as image recognition.
+
+SVM (Support Vector Machine)
+A classical machine learning algorithm used for classification and regression tasks.
+
+WaveNet
+A neural network architecture used to generate raw audio waveforms, often used in speech synthesis.
+
+GAN (Generative Adversarial Network)
+A model designed to generate synthetic data (images, video, audio) that resembles training data.
+
+XGBoost (Extreme Gradient Boosting)
+A high-performance gradient boosting algorithm used mainly for structured/tabular data prediction.
+
+WHY:
+
+Understanding these models allows you to quickly match the correct model type to a problem domain, which is often how exam questions are structured.
+
+Typical associations:
+
+Text generation → GPT
+Language understanding → BERT
+Sequential/time-series data → RNN
+Images/computer vision → ResNet
+Audio synthesis → WaveNet
+Synthetic data generation → GAN
+Traditional ML classification/regression → SVM
+Structured/tabular prediction → XGBoost
+
+EXAMPLE:
+
+Image recognition task → ResNet
+Generating synthetic images for training → GAN
+Generating human-like text → GPT
+Predicting structured business metrics → XGBoost",ai-ml-terms,Hard
+8ccf3fc5ca1740a497b70d18474910c2,Explain the differences between labeled vs. unlabeled data and structured vs. unstructured data in machine learning. How do these distinctions influence the choice of learning algorithms and model training strategies?,"WHAT:
+
+Labeled Data
+Data that contains both input features and the correct output labels.
+
+EXAMPLE:
+
+Images labeled as dog or cat.
+
+Unlabeled Data
+Data that contains only input features with no labels.
+The model must discover patterns and structure in the data itself.
+
+Structured Data
+Data organized in a predefined format such as rows and columns.
+Common examples include tabular datasets and time-series data.
+
+Unstructured Data
+Data that does not follow a predefined schema.
+
+EXAMPLE:
+
+s include text, images, audio, video, and social media content.
+
+WHY:
+
+These distinctions determine which machine learning approach can be used.
+
+Labeled data enables supervised learning, where models learn a mapping from inputs to known outputs.
+
+Unlabeled data enables unsupervised learning, where models must discover patterns, clusters, or structures without predefined answers.
+
+Structured data is typically easier to process and is commonly used with traditional ML algorithms.
+
+Unstructured data requires specialized models such as deep learning architectures to extract features automatically.
+
+Poor data quality leads to poor model performance — commonly summarized as “garbage in, garbage out.”
+
+HOW:
+
+Supervised Learning
+Uses labeled datasets to train models that predict known outcomes.
+
+Unsupervised Learning
+Uses unlabeled datasets to identify patterns such as clusters or hidden relationships.
+
+Structured Data Processing
+Often uses algorithms such as XGBoost, logistic regression, or random forests.
+
+Unstructured Data Processing
+Uses deep learning models such as CNNs for images, RNNs/Transformers for text, and other neural architectures.
+
+Data preparation steps typically include data cleaning, feature engineering, labeling, and validation to ensure training data quality.
+
+EXAMPLE:
+
+Image classification dataset with labels “cat” and “dog” → Supervised learning with labeled data
+
+Large collection of unlabeled product images → Unsupervised clustering
+
+Customer purchase dataset in Excel format → Structured tabular data
+
+Customer reviews, articles, and social media posts → Unstructured text data
+
+Stock price history with date and price columns → Structured time-series data",ai-ml-terms,Hard
+07fcbab27b0348d899a53abc79e0eaf8,"What is supervised learning, and how do regression, classification, dataset splitting, and feature engineering fit into the supervised learning workflow?","WHAT:
+
+Supervised learning is a machine learning approach where a model learns a mapping from input features to known output labels using labeled data.
+
+Regression is a supervised learning task used to predict a continuous numeric value.
+
+Classification is a supervised learning task used to predict a discrete category or class label.
+
+Training, validation, and test sets are different subsets of labeled data used to build, tune, and evaluate the model.
+
+Feature engineering is the process of selecting, transforming, or creating useful input features to improve model performance.
+
+WHY:
+
+Supervised learning requires labeled data because the model must learn the correct relationship between inputs and outputs.
+
+Regression is used when the answer is a number, such as predicting house price or weight.
+
+Classification is used when the answer is a category, such as spam vs not spam, cat vs dog, or fraud vs not fraud.
+
+Training / validation / test splitting is important because:
+- training data teaches the model
+- validation data helps tune the model
+- test data checks final performance on unseen examples
+
+Feature engineering improves model quality by turning raw data into more meaningful or more useful features.
+
+HOW:
+
+A typical supervised learning workflow is:
+
+1. Collect labeled data
+2. Split the data into:
+- training set
+- validation set
+- test set
+3. Train the model on the training set
+4. Tune the model using the validation set
+5. Evaluate final performance on the test set
+6. Improve input quality through feature engineering if needed
+
+Regression example:
+A model learns the relationship between height and weight and predicts weight for a new height.
+
+Classification example:
+A model learns from labeled emails and predicts whether a new email is spam or not spam.
+
+Feature engineering example:
+Convert birth date into age, or derive price per square foot from house size and price.
+
+EXAMPLE:
+
+Regression:
+Input = person height
+Output = predicted weight
+
+Classification:
+Input = email text
+Output = spam or not spam
+
+Dataset split:
+- 80% training
+- 10% validation
+- 10% test
+
+Feature engineering:
+- birth date → age
+- house price + size → price per square foot
+- customer review text → sentiment score",ai-ml-terms,Hard
+87905b44643e48a4a64821b60c0f2c54,"What is unsupervised learning, and how do clustering, association rule learning, anomaly detection, and semi-supervised learning relate to it?","WHAT:
+
+Unsupervised learning is a machine learning approach that works on unlabeled data. The algorithm tries to discover hidden patterns, structures, groups, or relationships without being told the correct output labels.
+
+Clustering is an unsupervised technique that groups similar data points together.
+
+Association rule learning is an unsupervised technique used to discover items or behaviors that frequently occur together.
+
+Anomaly detection is an unsupervised technique used to identify unusual or outlier data points that differ significantly from normal behavior.
+
+Semi-supervised learning is a hybrid approach that combines a small amount of labeled data with a large amount of unlabeled data.
+
+WHY:
+
+Unsupervised learning is useful when labeling data is too expensive, too slow, or simply impossible at large scale.
+
+Clustering helps identify natural groups in data, such as customer segments.
+
+Association rule learning helps identify relationships, such as products commonly bought together.
+
+Anomaly detection helps identify unusual events, such as potentially fraudulent transactions.
+
+Semi-supervised learning is valuable because it uses a small labeled dataset to help label a much larger unlabeled dataset, reducing the cost of manual labeling.
+
+HOW:
+
+In unsupervised learning, the model receives only input features and tries to identify structure on its own.
+
+Clustering:
+The algorithm groups similar data points together, and humans later interpret what each group means.
+
+Association rule learning:
+The algorithm finds common relationships in the data, such as products that are often purchased together.
+
+Anomaly detection:
+The algorithm identifies points that are far from normal patterns and flags them as suspicious.
+
+Semi-supervised learning:
+1. Start with a small labeled dataset
+2. Train an initial model
+3. Use that model to assign pseudo-labels to unlabeled data
+4. Retrain the model using the larger now-labeled dataset
+
+EXAMPLE:
+
+Clustering:
+Group customers by purchasing behavior for targeted marketing
+
+Association rule learning:
+Detect that bread and butter are often purchased together
+
+Anomaly detection:
+Flag unusual credit card transactions that differ from normal behavior
+
+Semi-supervised learning:
+Use a small set of labeled fruit images to help label a much larger set of unlabeled fruit images, then retrain the model on the expanded labeled dataset",ai-ml-terms,Hard
+e068edfbd20d426ab83ea5642e0a710d,"What is reinforcement learning, and how do the concepts of agent, environment, state, action, reward, and policy work together to allow an AI system to learn optimal behavior?","WHAT:
+
+Reinforcement learning is a type of machine learning in which an agent learns how to make decisions by interacting with an environment and maximizing cumulative rewards over time.
+
+Agent
+The learner or decision-maker that interacts with the environment.
+
+Environment
+The external system or world in which the agent operates.
+
+State
+The current situation or configuration of the environment observed by the agent.
+
+Action
+A decision or move the agent can take in the environment.
+
+Reward
+Feedback provided by the environment that evaluates the agent’s action.
+
+Policy
+A strategy that determines which action the agent should take in a given state.
+
+Cumulative reward
+The total reward accumulated over time that the agent tries to maximize.
+
+WHY:
+
+Reinforcement learning is used when decisions must be learned through trial and error rather than through labeled training data.
+
+Instead of learning from predefined correct answers, the agent learns from rewards and penalties.
+
+This approach is useful for complex environments where it is difficult to explicitly define the best action for every situation.
+
+HOW:
+
+The reinforcement learning process typically follows these steps:
+
+1. The agent observes the current state of the environment.
+2. The agent chooses an action based on its policy.
+3. The environment transitions to a new state.
+4. The agent receives a reward or penalty.
+5. The agent updates its policy based on the reward received.
+
+This process repeats many times through simulations or interactions.
+
+Over time the agent learns which actions maximize the cumulative reward and improves its decision strategy.
+
+EXAMPLE:
+
+Maze navigation
+
+Agent: robot
+Environment: maze
+Actions: move up, down, left, right
+Reward system:
+- 1 for each step
+- 10 for hitting a wall
++100 for reaching the exit
+
+Through many iterations the robot learns the shortest path to the exit because that strategy maximizes the cumulative reward.
+
+Real-world applications include:
+
+Game AI (chess, Go)
+Robotics navigation
+Autonomous vehicles
+Financial portfolio optimization
+Healthcare treatment planning",ai-ml-terms,Hard
+dd1379f26c014e559d053da886dd40b2,"Explain overfitting, underfitting, bias, and variance in machine learning and how they relate to model performance.","WHAT:
+
+Overfitting
+Model learns training data too closely (including noise).
+High variance, low bias.
+Poor performance on unseen data.
+
+Underfitting
+Model is too simple to capture patterns.
+High bias, low variance.
+Poor performance on training and test data.
+
+Bias
+Error caused by simplifying assumptions in the model.
+
+Variance
+
+HOW:
+
+much model predictions change when training data changes.
+
+WHY:
+
+A good model must generalize to new data.
+
+High bias → underfitting
+High variance → overfitting
+
+Goal: balance bias and variance to minimize prediction error.
+
+HOW:
+
+Reduce bias:
+- use more expressive models
+- add better features
+
+Reduce variance:
+- reduce unnecessary features
+- increase training data
+- apply regularization
+
+EXAMPLE:
+
+Underfitting
+Linear model applied to non-linear data.
+
+Overfitting
+Model fits every training point exactly but fails on new data.
+
+Balanced model
+Captures the general trend while still generalizing well.",ai-ml-terms,Hard
+b123184851864c78b04ff643061b01f9,What metrics are commonly used to evaluate classification models and regression models in machine learning?,"WHAT:
+
+Classification metrics evaluate models that predict categories.
+
+Common classification metrics:
+- Precision
+- Recall
+- F1 Score
+- Accuracy
+- AUC-ROC (Area Under the Receiver Operating Characteristic curve)
+
+Regression metrics evaluate models that predict continuous numeric values.
+
+Common regression metrics:
+- MAE (Mean Absolute Error)
+- MAPE (Mean Absolute Percentage Error)
+- RMSE (Root Mean Squared Error)
+- R² (R-squared)
+
+WHY:
+
+Different machine learning tasks require different evaluation metrics.
+
+Classification models predict labels or categories.
+
+Regression models predict numeric values.
+
+Using the correct metric helps determine how accurate and reliable the model is.
+
+HOW:
+
+Classification metrics use a confusion matrix to compare predicted labels with actual labels.
+
+Key ideas:
+- Precision → how many predicted positives were correct
+- Recall → how many real positives were detected
+- F1 Score → balance between precision and recall
+- Accuracy → overall percentage of correct predictions
+- AUC-ROC → measures how well a model separates positive and negative classes across different thresholds
+
+Regression metrics measure the prediction error between predicted and actual values.
+
+Lower error values generally indicate better models.
+
+EXAMPLE:
+
+Spam detection → classification metrics such as Precision, Recall, F1, and AUC-ROC
+
+Fraud detection → classification model evaluated using ROC curves
+
+House price prediction → regression metrics such as MAE or RMSE
+
+Student score prediction → regression metrics measuring prediction error",ai-ml-terms,Medium
+8271de00a22748debc7ab4cf9aed7226,How are evaluation metrics used in practice for classification and regression models?,"WHAT:
+
+Evaluation metrics measure how well a machine learning model performs.
+
+Classification metrics evaluate models that predict categories.
+
+Common classification metrics:
+- Precision
+- Recall
+- F1 score
+- Accuracy
+- AUC-ROC
+
+Regression metrics evaluate models that predict numeric values.
+
+Common regression metrics:
+- MAE
+- MAPE
+- RMSE
+- R²
+
+WHY:
+
+Different problems require different evaluation metrics.
+
+Some applications care more about avoiding false positives.
+
+Other applications care more about avoiding false negatives.
+
+Regression metrics help measure how far predictions are from real values.
+
+Choosing the correct metric helps select the best model.
+
+HOW:
+
+Classification:
+
+Use precision when false positives are costly (e.g., spam detection).
+
+Use recall when missing positives is costly (e.g., disease or fraud detection).
+
+Use F1 score when you need a balance between precision and recall.
+
+Use AUC-ROC to compare multiple classification models across thresholds.
+
+Regression:
+
+Use MAE or RMSE to measure prediction error; lower values mean better predictions.
+
+Use R² to understand how much variance the model explains.
+
+EXAMPLE:
+
+Spam filter
+Precision helps reduce emails incorrectly marked as spam.
+
+Fraud detection
+Recall ensures most fraudulent transactions are detected.
+
+House price prediction
+RMSE measures how far predicted prices are from real prices.
+
+Student exam prediction
+R² shows how much exam performance is explained by study hours.",ai-ml-terms,Medium
+16d7be021d7b4e3caee4bebdf80e0bfa,"What are hyperparameters in machine learning, why are they important, and what are the key hyperparameters to tune?","WHAT:
+
+Hyperparameters are configuration settings chosen before training that control how a machine learning model learns.
+
+They are not learned from the data.
+
+Key hyperparameters include:
+
+Learning Rate
+- Controls how large each weight update step is during training.
+
+Batch Size
+- Controls how many training examples are used in one update.
+
+Number of Epochs
+- Controls how many times the model goes through the full training dataset.
+
+Regularization
+- Controls how flexible or complex the model is and helps reduce overfitting.
+
+WHY:
+
+Hyperparameters are important because they strongly affect:
+
+- training speed
+- model accuracy
+- overfitting vs underfitting
+- how well the model generalizes to new data
+
+Good hyperparameter choices improve performance.
+
+Poor choices can make training unstable or lead to weak results.
+
+HOW:
+
+Hyperparameter tuning is the process of testing different values to find the best combination.
+
+Common approaches include:
+
+- Grid Search
+- Random Search
+- Automated tuning tools such as SageMaker Automatic Model Tuning
+
+Typical effects:
+
+- High learning rate → faster learning but risk of overshooting
+- Low learning rate → slower but more precise learning
+- Small batch size → more stable updates but slower training
+- Large batch size → faster training but less stable updates
+- Too few epochs → underfitting
+- Too many epochs → overfitting
+- More regularization → helps reduce overfitting
+
+EXAMPLE:
+
+Training a neural network:
+
+- Learning rate too high → model may miss the optimal solution
+- Learning rate too low → model trains very slowly
+- Too few epochs → model does not learn enough
+- Too many epochs → model memorizes training data
+- Increasing regularization → helps prevent overfitting",ai-ml-terms,Medium

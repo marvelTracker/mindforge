@@ -1,0 +1,246 @@
+id,question,answer,topic,difficulty
+05a4f5bb500048cc95ac3cee6c36d886,How do the different SageMaker deployment types compare and when should each be used?,"WHAT:
+
+Amazon SageMaker supports four deployment types for model inference:
+
+Real-Time Inference
+Serverless Inference
+Asynchronous Inference
+Batch Transform
+
+These options differ mainly in latency, payload size, and use case.
+
+WHY:
+
+Choosing the correct deployment type ensures:
+
+- efficient cost usage
+- correct latency requirements
+- support for payload size and processing duration
+
+This is a common AWS exam comparison question.
+
+HOW:
+
+Real-Time Inference
+- low latency
+- request/response immediately returned
+- supports small payloads (single record)
+- requires configured infrastructure and autoscaling
+
+Serverless Inference
+- low latency
+- no infrastructure management
+- automatic scaling
+- may experience cold starts after idle periods
+
+Asynchronous Inference
+- near-real-time responses
+- supports very large payloads (up to ~1 GB)
+- processing may take several minutes
+- request and response stored in S3
+
+Batch Transform
+- used for processing large datasets
+- predictions generated for many records
+- high latency (minutes to hours)
+- input and output stored in S3
+
+EXAM TRAP:
+
+Real-time inference → low latency single prediction
+
+Serverless inference → real-time but no infrastructure management
+
+Asynchronous inference → large payload single request
+
+Batch transform → many predictions for entire dataset
+
+EXAMPLE:
+
+Fraud detection API → Real-Time Inference
+
+Occasional prediction service with unpredictable traffic → Serverless
+
+Large video file analysis → Asynchronous Inference
+
+Generating predictions for millions of records overnight → Batch Transform",sagemaker,Hard
+ad49a207032740889d14466f62b105c3,What is SageMaker Automatic Model Tuning (AMT) and how does it optimize machine learning models?,"WHAT:
+
+SageMaker Automatic Model Tuning (AMT) automatically searches for the best hyperparameters for a machine learning model.
+
+It improves model performance without manually testing parameter combinations.
+
+WHY:
+
+Hyperparameters strongly influence model accuracy and performance.
+
+Manually testing combinations can be expensive and time-consuming.
+
+AMT automates the tuning process to:
+
+- improve model accuracy
+- reduce training cost
+- find optimal hyperparameters faster
+
+HOW:
+
+AMT works by running multiple training jobs with different hyperparameter values.
+
+Key components:
+
+Objective Metric
+- the performance metric to optimize (example: accuracy)
+
+Hyperparameter Range
+- the allowed values for parameters such as learning rate or batch size
+
+Search Strategy
+- algorithm used to explore parameter combinations
+
+Early Stopping
+- automatically stops poorly performing training jobs
+
+EXAM TRAP:
+
+AMT does not train the final model directly.
+
+It runs multiple training experiments to discover the best hyperparameter configuration.
+
+The best configuration is then used to train the final model.
+
+EXAMPLE:
+
+A data scientist trains an image classification model.
+
+They configure AMT to optimize for validation accuracy.
+
+SageMaker launches multiple training jobs with different hyperparameters.
+
+The system identifies the best configuration and returns the optimal settings.",sagemaker,Hard
+d252426e2e1e4f03858f9f4c08b106d0,What are SageMaker Data Wrangler and SageMaker Feature Store and how are they used in ML pipelines?,"WHAT:
+
+SageMaker Data Wrangler is a tool used to prepare and transform data before training machine learning models.
+
+It supports:
+
+- data preparation
+- data transformation
+- feature engineering
+- data visualization
+- data quality analysis
+
+SageMaker Feature Store is a centralized repository that stores machine learning features so they can be reused across models.
+
+WHY:
+
+Machine learning models depend on high-quality features.
+
+These services help teams:
+
+- prepare raw datasets
+- engineer useful ML features
+- reuse features across multiple models
+- maintain consistency between training and inference
+
+HOW:
+
+Data Wrangler
+
+Used during the data preparation stage.
+
+Capabilities include:
+
+- importing data from sources such as Amazon S3
+- cleansing datasets
+- visualizing data distributions
+- transforming columns and generating features
+- exporting data pipelines
+
+Feature Store
+
+Stores features used by ML models.
+
+Key capabilities:
+
+- centralized catalog of features
+- feature discovery in SageMaker Studio
+- consistent features for training and inference
+- ingestion from Data Wrangler pipelines
+
+EXAMPLE:
+
+A recommendation system processes user listening history.
+
+Data Wrangler transforms raw timestamps into numerical features such as listening duration.
+
+These features are stored in SageMaker Feature Store and reused by multiple machine learning models such as recommendation engines and churn prediction systems.",sagemaker,Medium
+91832afee2fb4a578a80f22d27e3adc0,What are the main components and features of Amazon SageMaker?,"WHAT:
+
+Amazon SageMaker is AWS's fully managed end-to-end machine learning platform used to build, train, tune, deploy, and monitor ML models.
+
+It provides tools for the entire ML lifecycle.
+
+KEY FEATURES:
+
+Model Development
+
+- SageMaker Studio → unified development interface
+- SageMaker Canvas → no-code ML builder
+- SageMaker JumpStart → prebuilt models and solutions
+
+Data Preparation
+
+- SageMaker Data Wrangler → data preparation and feature engineering
+- SageMaker Feature Store → centralized storage of ML features
+
+Model Training
+
+- SageMaker Automatic Model Tuning → hyperparameter optimization
+- built-in ML algorithms and training infrastructure
+
+Model Deployment
+
+- Real-Time Inference → low latency predictions
+- Serverless Inference → no infrastructure management
+- Asynchronous Inference → large payload processing
+- Batch Transform → predictions for entire datasets
+
+Model Monitoring and Governance
+
+- SageMaker Model Monitor → monitor model performance
+- SageMaker Clarify → detect bias and explain model predictions
+- SageMaker Model Registry → manage model versions
+- SageMaker Model Cards → document models
+- SageMaker Model Dashboard → view all models
+
+ML Workflow Automation
+
+- SageMaker Pipelines → CI/CD for ML workflows
+- SageMaker Ground Truth → data labeling and human feedback
+- Role Manager → access control for ML resources
+- MLflow on SageMaker → experiment tracking
+
+EXAM TRAP:
+
+Remember SageMaker is an end-to-end ML platform.
+
+Typical exam clues:
+
+- build, train, tune, deploy ML models → SageMaker
+- hyperparameter tuning → Automatic Model Tuning
+- feature repository → Feature Store
+- data preparation → Data Wrangler
+- no-code ML → Canvas
+- prebuilt ML models → JumpStart
+
+EXAMPLE:
+
+A company building a recommendation system uses:
+
+- Data Wrangler to clean and transform data
+- Feature Store to manage features
+- Automatic Model Tuning to optimize training
+- SageMaker Pipelines to automate workflows
+- Real-Time endpoints to serve predictions
+- Model Monitor to track model performance",sagemaker,Medium

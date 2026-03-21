@@ -1,0 +1,16 @@
+id,question,answer,topic,difficulty
+0b081f5647a54051a53ea3b3554c3077,What is tokenization in generative AI models and why is it necessary?,"WHAT:
+
+Tokenization breaks raw text into tokens (words, subwords, punctuation) so the model can work with discrete units. WHY: LLMs process numbers, not raw text, so tokens map to vocabulary IDs that the model understands. HOW: A tokenizer splits text into tokens and assigns each token an integer ID; the model consumes these IDs instead of characters. EXAMPLE: 'Wow, learning AWS is fun!' becomes tokens ['Wow', ',', 'learning', 'AWS', 'is', 'fun', '!'] mapped to IDs such as [523, 12, 1043, 8652, 44, 991, 5].",genai-core-concepts,Hard
+f0ee56b9ef3a4b5c8bc173ce343e4029,What is a context window in a large language model?,"WHAT:
+
+The context window is the maximum number of tokens the model can ingest at once during inference. WHY: A larger window lets the model consider more instructions, history, or retrieved context, improving coherence and long-document reasoning. HOW: All prompt pieces—system instructions, user input, chat history, RAG context—must fit inside the window; anything beyond it is dropped. EXAMPLE: GPT-4 Turbo supports roughly 128k tokens (hundreds of pages or ~30,000 lines of code) per prompt.",genai-core-concepts,Hard
+6cb4f6f0e9714c8b8270efe548430da0,What are embeddings in generative AI systems?,"WHAT:
+
+Embeddings convert text (or other modalities) into high-dimensional numeric vectors that capture meaning. WHY: They allow semantic comparisons instead of literal string matching, enabling smarter search and clustering. HOW: An embedding model processes tokens/text and outputs a vector; similar meanings produce vectors that sit close together in vector space. EXAMPLE: The words 'dog', 'puppy', and 'cat' produce nearby vectors because they describe related animals.",genai-core-concepts,Hard
+62a850708fce45e1a4e97a168096431b,How do embeddings enable semantic similarity search?,"WHAT:
+
+Semantic similarity search retrieves content with similar meaning, not just identical words. WHY: Users rarely remember exact phrasing; embeddings close the gap by comparing semantics. HOW: Both queries and documents become embedding vectors; a vector database performs nearest-neighbor search to find the closest vectors. EXAMPLE: The query 'How do I reset my password?' retrieves a document titled 'Account password recovery steps' because their vectors lie near each other.",genai-core-concepts,Hard
+46d202bf67eb42fd960fd723c9f0e096,"Why do embedding vectors use high dimensionality (e.g., 100+ dimensions)?","WHAT:
+
+Each embedding dimension captures a learned linguistic or contextual feature. WHY: High dimensionality lets the model represent nuanced attributes like sentiment, syntax, domain, and context simultaneously. HOW: The embedding model learns to distribute information across dozens or hundreds of dimensions so similar concepts share similar values. EXAMPLE: 'dog' and 'puppy' align across many dimensions, while 'house' differs, placing it farther away in vector space.",genai-core-concepts,Hard
