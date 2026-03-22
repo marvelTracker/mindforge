@@ -317,3 +317,545 @@ EXAM TRAP:
 - Using EFS for object storage use cases (should use S3)
 - Forgetting EFS is Linux-only
 - Assuming you need to provision capacity (EFS auto-scales)",data-ingestion,Medium
+4b1def2cb8524447b6e5a903c57919c3,"What is Amazon FSx, what file system types does it support, and when should each be used in ML/data ingestion systems?","WHAT:
+- Amazon FSx is a fully managed service that allows you to run high-performance, third-party file systems on AWS.
+- It is similar to RDS, but for file systems instead of databases.
+
+SUPPORTED FILE SYSTEMS:
+
+- FSx for Windows File Server:
+  - Windows-native file system (SMB protocol, NTFS)
+  - Integrates with Active Directory (ACLs, user permissions)
+  - Can be mounted on Windows and Linux EC2 instances
+  - Use for enterprise file shares, home directories, CMS
+  - Supports Multi-AZ and daily backups to S3
+
+- FSx for Lustre:
+  - High-performance distributed file system for HPC and ML workloads
+  - Extremely high throughput, millions of IOPS, sub-ms latency
+  - Integrates with S3 (read/write directly)
+  - Two deployment types:
+    - Scratch → temporary, no replication, high performance
+    - Persistent → replicated within AZ, durable
+  - Use for ML training, big data, video processing
+
+- FSx for NetApp ONTAP:
+  - Enterprise-grade file system supporting NFS, SMB, and iSCSI
+  - Compatible with Linux, Windows, macOS, VMware, containers
+  - Features:
+    - Auto-scaling
+    - Snapshots and replication
+    - Data compression and deduplication
+    - Instant cloning
+  - Use for migrating on-prem NAS/ONTAP workloads
+
+- FSx for OpenZFS:
+  - Managed OpenZFS file system (NFS protocol)
+  - High performance (low latency, high IOPS)
+  - Supports snapshots, compression, cloning
+  - No deduplication
+  - Use for workloads already using ZFS or requiring high performance file storage
+
+KEY DIFFERENCES:
+- Windows FSx → enterprise file sharing (SMB, AD integration)
+- Lustre → ML / HPC workloads (performance + S3 integration)
+- ONTAP → enterprise storage migration with advanced features
+- OpenZFS → high-performance NFS workloads
+
+WHY:
+- Provides managed, high-performance file systems without manual setup
+- Enables specialized workloads (ML, HPC, enterprise storage)
+- Integrates with AWS services (especially S3)
+
+WHEN TO USE:
+- FSx Windows → Windows environments, AD integration
+- FSx Lustre → ML training, big data, HPC workloads
+- FSx ONTAP → enterprise NAS migration, multi-protocol workloads
+- FSx OpenZFS → high-performance file storage with NFS
+
+EXAM TRAP:
+- Using EFS instead of FSx for HPC workloads (use Lustre)
+- Forgetting FSx Lustre integrates directly with S3
+- Confusing Windows FSx with EFS (SMB vs NFS)
+- Not distinguishing scratch vs persistent Lustre
+- Missing ONTAP features (deduplication, cloning)","data-ingestion",Medium
+08def6c80ea4417db284c43d91039d7e,"What is Amazon Kinesis Data Streams, how does it work, and when should it be used in ML/data ingestion systems?","WHAT:
+- Amazon Kinesis Data Streams (KDS) is a real-time streaming service used to collect, store, and process data as it is generated.
+- It is designed for continuous ingestion of real-time data such as logs, clickstreams, IoT data, and metrics.
+
+ARCHITECTURE:
+- Producers:
+  - Send data into Kinesis (applications, Kinesis Agent)
+- Kinesis Data Streams:
+  - Stores streaming data in shards
+- Consumers:
+  - Read and process data (applications, AWS Lambda, Kinesis Data Firehose, Apache Flink)
+
+KEY FEATURES:
+- Real-time ingestion:
+  - Data is processed as it is generated
+- Data retention:
+  - Data can be stored for up to 365 days
+  - Supports replay/reprocessing of data
+- Immutable data:
+  - Once data is written, it cannot be deleted manually (expires based on retention)
+- Ordering:
+  - Data is ordered within a shard using partition key
+- Security:
+  - Encryption at rest (KMS)
+  - Encryption in transit (HTTPS)
+
+CAPACITY MODES:
+- Provisioned mode:
+  - You define number of shards
+  - Each shard:
+    - Write: 1 MB/sec or 1000 records/sec
+    - Read: 2 MB/sec
+  - Manual scaling required
+  - Pay per shard per hour
+
+- On-demand mode:
+  - Automatically scales based on traffic
+  - No need to manage shards
+  - Pay per data throughput
+  - Good for unpredictable workloads
+
+PERFORMANCE TOOLS:
+- KPL (Kinesis Producer Library):
+  - Optimizes high-throughput producers
+- KCL (Kinesis Client Library):
+  - Helps build scalable consumer applications
+
+WHY:
+- Enables real-time data ingestion for ML pipelines
+- Supports streaming analytics and immediate processing
+- Allows replay of historical data for model retraining
+
+WHEN TO USE:
+- Real-time analytics (clickstreams, logs)
+- IoT data ingestion
+- Streaming ML features or predictions
+- Event-driven architectures
+
+WHEN NOT TO USE:
+- Batch ingestion → use S3 + Glue
+- Simple streaming → use Kinesis Data Firehose
+- Complex orchestration → use Step Functions
+
+EXAM TRAP:
+- Missing ""real-time"" keyword (core signal for Kinesis)
+- Confusing Kinesis Data Streams vs Firehose
+- Forgetting shard limits (throughput per shard)
+- Not using on-demand mode for unpredictable traffic
+- Forgetting data can be replayed (retention feature)","data-ingestion",Medium
+540297082e2247e4a21972f52ceba4b5,"What is Amazon Data Firehose, how does it work, and when should it be used in ML/data ingestion systems?","WHAT:
+- Amazon Data Firehose is a fully managed service used to load streaming data into target destinations.
+- It focuses on delivery (ingestion → destination), not long-term streaming storage.
+
+ARCHITECTURE:
+- Data sources (producers):
+  - Applications (SDK)
+  - Kinesis Agent
+  - AWS services (Kinesis Data Streams, CloudWatch Logs, IoT)
+
+- Firehose:
+  - Receives streaming data
+  - Buffers data (by time or size)
+  - Optionally transforms data using AWS Lambda
+
+- Destinations:
+  - AWS: S3, Redshift, OpenSearch
+  - Third-party: Splunk, Datadog, New Relic, MongoDB
+  - Custom HTTP endpoints
+
+KEY FEATURES:
+- Fully managed:
+  - No infrastructure or shard management
+- Automatic scaling:
+  - Handles throughput automatically
+- Near real-time:
+  - Data is buffered before delivery (not instant)
+- Data transformation:
+  - Lambda-based transformation (e.g., CSV → JSON)
+- Format conversion:
+  - Supports Parquet, ORC
+- Compression:
+  - gzip, snappy
+- Backup:
+  - Can store all or failed records in S3
+
+WHY:
+- Simplifies streaming data delivery to storage and analytics systems
+- Removes need to build consumers and scaling logic
+- Ideal for building data lakes and ML pipelines
+
+WHEN TO USE:
+- Stream data directly into S3 (data lake)
+- Load data into Redshift for analytics
+- Send logs to OpenSearch for search/monitoring
+- Simple ingestion without custom processing logic
+
+WHEN NOT TO USE:
+- Real-time processing → use Kinesis Data Streams
+- Replay requirements → use Kinesis Data Streams
+- Custom streaming logic → use Kinesis + consumers
+
+KINESIS STREAMS VS FIREHOSE:
+- Kinesis Data Streams:
+  - Real-time processing
+  - Supports replay
+  - Requires custom consumers
+  - Stores data temporarily
+
+- Data Firehose:
+  - Near real-time delivery
+  - No replay
+  - Fully managed (no consumer logic)
+  - Pushes data to destinations
+
+EXAM TRAP:
+- Choosing Firehose when replay is required (not supported)
+- Confusing real-time vs near real-time
+- Forgetting Firehose does buffering
+- Assuming Firehose stores data (it does not)
+- Using Streams when simple delivery is enough","data-ingestion",Medium
+b90ea26c4783496dafdb8c8e9cd56c51,"What is the difference between Kinesis Data Streams and Amazon Data Firehose, and when should each be used?","WHAT:
+- Kinesis Data Streams:
+  - Real-time streaming service for collecting and processing data
+  - Requires custom producers and consumers
+
+- Amazon Data Firehose:
+  - Fully managed service for delivering streaming data to destinations
+  - No need to build consumers
+
+KEY DIFFERENCES:
+- Processing:
+  - Streams → real-time processing (milliseconds)
+  - Firehose → near real-time (buffered, seconds/minutes)
+
+- Control:
+  - Streams → full control (custom logic, multiple consumers)
+  - Firehose → limited control (managed delivery)
+
+- Storage & Replay:
+  - Streams → stores data (up to 365 days), supports replay
+  - Firehose → no storage, no replay
+
+- Scaling:
+  - Streams → shard-based (manual or on-demand scaling)
+  - Firehose → automatic scaling (serverless)
+
+- Complexity:
+  - Streams → complex (manage consumers, scaling, checkpoints)
+  - Firehose → simple (plug and deliver)
+
+- Destinations:
+  - Streams → consumers decide destination
+  - Firehose → built-in destinations (S3, Redshift, OpenSearch, HTTP)
+
+WHY:
+- Streams enables real-time analytics, ML processing, and replayable pipelines
+- Firehose simplifies ingestion pipelines by directly delivering data to storage or analytics systems
+
+WHEN TO USE:
+- Kinesis Data Streams:
+  - Real-time processing required
+  - Multiple consumers needed
+  - Replay capability required
+  - Custom logic or ML pipelines
+
+- Amazon Data Firehose:
+  - Simple data delivery to S3/Redshift/OpenSearch
+  - No custom processing needed
+  - No replay requirement
+  - Fully managed, minimal setup
+
+EXAM TRAP:
+- Choosing Firehose for real-time processing (wrong → use Streams)
+- Choosing Firehose when replay is required (not supported)
+- Confusing real-time vs near real-time
+- Using Streams when simple delivery is enough
+- Forgetting Firehose buffers data before delivery","data-ingestion",Medium
+19745a837b5c46d794c5d3c018360851,"What is Amazon Managed Service for Apache Flink (formerly Kinesis Data Analytics), how does it work, and when should it be used in ML/data ingestion pipelines?","WHAT:
+- Amazon Managed Service for Apache Flink is a fully managed service for real-time stream processing.
+- It allows you to process and transform streaming data from sources like Kinesis Data Streams and Data Firehose.
+- It replaces the older Kinesis Data Analytics service for advanced use cases.
+
+ARCHITECTURE:
+- Input sources:
+  - Kinesis Data Streams
+  - Amazon Data Firehose
+
+- Processing (Flink):
+  - Continuous stream processing
+  - Stateful computations
+  - Windowing and aggregations
+
+- Optional reference data:
+  - S3-based lookup tables (for joins and enrichment)
+
+- Outputs:
+  - Kinesis Data Streams
+  - Data Firehose → S3 / Redshift / OpenSearch
+  - Lambda → downstream services (DynamoDB, SNS, SQS, etc.)
+
+KEY FEATURES:
+- Real-time processing:
+  - Processes data as it arrives (low latency)
+- Stateful processing:
+  - Maintains memory across events (e.g., counts, sessions)
+- Windowing:
+  - Supports time-based aggregations (e.g., per minute/hour)
+- ETL on streams:
+  - Performs transformations on streaming data
+- SQL + code:
+  - SQL-based processing (legacy)
+  - Java/Scala/Python (Flink applications)
+- Integration:
+  - Works with Lambda for extended processing
+- Scalability:
+  - Automatically scales with stream volume
+
+WHY:
+- Enables real-time analytics and transformations on streaming data
+- Supports complex logic (aggregation, joins, enrichment)
+- Acts as the processing layer between ingestion (Kinesis) and storage (S3/Redshift)
+
+WHEN TO USE:
+- Real-time analytics on streaming data
+- Feature engineering for ML in real-time
+- Fraud detection and anomaly detection
+- Session-based processing and aggregations
+- Stream ETL pipelines
+
+WHEN NOT TO USE:
+- Simple data delivery → use Data Firehose
+- Per-event processing without state → use Lambda
+- Batch processing → use Glue / EMR
+
+EXAM TRAP:
+- Confusing Kinesis (ingestion) with Flink (processing)
+- Using Firehose for real-time processing (not suitable)
+- Forgetting Flink supports stateful and windowed processing
+- Thinking Kinesis Data Analytics (SQL) is the primary modern solution
+- Not recognizing Flink as the replacement for Kinesis Data Analytics","data-ingestion",Medium
+70ae3a9baf734810a9af9da194afddef,"What is Amazon MSK (Managed Streaming for Apache Kafka), how does it work, and how does it differ from Kinesis Data Streams in ML/data ingestion pipelines?","WHAT:
+- Amazon MSK (Managed Streaming for Apache Kafka) is a fully managed Apache Kafka service on AWS.
+- It allows you to run Kafka clusters without managing infrastructure.
+- It is an alternative to Kinesis Data Streams for real-time streaming.
+
+ARCHITECTURE:
+- Kafka cluster (in VPC):
+  - Brokers (store and replicate data)
+  - Zookeeper nodes (cluster coordination)
+
+- Data flow:
+  - Producers → send data to Kafka topics
+  - Topics → replicated across brokers for durability
+  - Consumers → read and process data
+
+- Storage:
+  - Data stored on EBS volumes
+
+KEY FEATURES:
+- Fully managed:
+  - AWS manages brokers, Zookeeper, scaling, recovery
+- Multi-AZ:
+  - High availability across multiple AZs
+- High configurability:
+  - Custom configurations (e.g., message size > 1MB)
+- Data retention:
+  - Flexible retention based on time/size
+- Large message support:
+  - Can support larger messages than Kinesis (configurable)
+- Open ecosystem:
+  - Works with Kafka tools and APIs
+
+SECURITY:
+- Encryption:
+  - In-transit (TLS between brokers and clients)
+  - At-rest (KMS for EBS volumes)
+- Authentication:
+  - Mutual TLS
+  - SASL/SCRAM (username/password)
+  - IAM Access Control
+- Authorization:
+  - Kafka ACLs (for TLS/SASL)
+  - IAM policies (for IAM auth)
+- Network:
+  - VPC + security groups
+
+MONITORING:
+- CloudWatch metrics (basic and enhanced)
+- Prometheus integration
+- Broker logs to S3 / CloudWatch / Kinesis
+
+WHY:
+- Provides a highly configurable streaming platform
+- Supports complex streaming architectures with Kafka ecosystem
+- Useful when migrating existing Kafka workloads to AWS
+
+WHEN TO USE:
+- Existing Kafka-based systems migrating to AWS
+- Need for advanced configuration and tuning
+- Large message sizes required (>1MB)
+- Integration with Kafka ecosystem tools
+- Long retention and flexible streaming pipelines
+
+WHEN NOT TO USE:
+- Simple streaming use cases → use Kinesis Data Streams
+- Fully managed minimal setup → use Kinesis
+- Tight AWS integration required → prefer Kinesis
+
+KINESIS VS MSK:
+- Kinesis Data Streams:
+  - Fully managed (no infrastructure)
+  - Limited configurability
+  - 1MB message size limit
+  - Native AWS integration
+  - Easier to use
+
+- Amazon MSK:
+  - Managed but requires Kafka knowledge
+  - Highly configurable
+  - Larger message sizes supported
+  - Uses Kafka APIs and ecosystem
+  - More operational complexity
+
+EXAM TRAP:
+- Choosing MSK when simple Kinesis is sufficient
+- Forgetting Kinesis has a strict 1MB limit
+- Confusing Kafka ACLs vs IAM policies
+- Assuming MSK is fully serverless (it is not)
+- Ignoring Kafka’s higher complexity compared to Kinesis","data-ingestion",Medium
+5a1f94c57f6a4261abd0157148d997a3,"What are the security mechanisms in Amazon MSK, and how do authentication and authorization work compared to Kinesis?","WHAT:
+- Amazon MSK provides security through encryption, network isolation, authentication, and authorization.
+- Security must be configured across multiple layers (network, transport, identity, and topic-level access).
+
+ENCRYPTION:
+- In-transit:
+  - TLS encryption between brokers (enabled by default)
+  - TLS between clients and brokers (enabled by default, can be disabled)
+- At-rest:
+  - Data encrypted using KMS on EBS volumes
+
+NETWORK SECURITY:
+- Deployed inside a VPC
+- Uses security groups to control access between clients and brokers
+- Private cluster access (no public exposure by default)
+
+AUTHENTICATION METHODS:
+- Mutual TLS (mTLS):
+  - Uses certificates for client authentication
+- SASL/SCRAM:
+  - Username/password authentication
+- IAM Access Control:
+  - Uses IAM roles and policies for authentication
+
+AUTHORIZATION:
+- Kafka ACLs:
+  - Used with mTLS and SASL/SCRAM
+  - Define permissions (read/write) at topic level
+- IAM Policies:
+  - Used when IAM authentication is enabled
+  - Handles both authentication and authorization
+
+KEY DIFFERENCE:
+- Kafka ACLs:
+  - Managed inside Kafka cluster
+  - NOT controlled by IAM
+- IAM Access Control:
+  - Managed via AWS IAM
+  - Similar model to Kinesis
+
+WHY:
+- Ensures secure communication and access control for streaming data
+- Supports enterprise-grade security models (certificates, IAM, ACLs)
+- Enables fine-grained topic-level access control
+
+WHEN TO USE:
+- Use mTLS when certificate-based authentication is required
+- Use SASL/SCRAM for simple username/password setups
+- Use IAM Access Control for AWS-native integration and simplified management
+
+KINESIS VS MSK SECURITY:
+- Kinesis:
+  - Uses IAM for authentication and authorization
+  - Simpler, fully integrated with AWS security model
+
+- MSK:
+  - Supports multiple authentication mechanisms
+  - Requires understanding of Kafka ACLs vs IAM
+  - More flexible but more complex
+
+EXAM TRAP:
+- Assuming IAM controls Kafka ACLs (it does not)
+- Forgetting mTLS uses certificates, not IAM
+- Confusing authentication (who you are) vs authorization (what you can do)
+- Assuming MSK security is as simple as Kinesis
+- Forgetting MSK requires VPC + security group configuration","data-ingestion",Medium
+6f70e6aa7d434a5e829c5591b1f9a111,"How do you choose between Kinesis Data Streams and Amazon MSK in exam scenarios, and what are the key differences?","WHAT:
+- Kinesis Data Streams:
+  - AWS-native streaming service
+  - Uses shards for scaling
+  - Fully managed and simpler to operate
+
+- Amazon MSK:
+  - Managed Apache Kafka service
+  - Uses topics and partitions
+  - More configurable but more complex
+
+KEY DIFFERENCES:
+- Message size:
+  - Kinesis → hard limit of 1MB
+  - MSK → 1MB default, configurable to larger sizes (e.g., 10MB)
+  - Large message requirement → choose MSK
+
+- Scaling:
+  - Kinesis → shard split and merge supported
+  - MSK → can add partitions but cannot remove them easily
+
+- Data model:
+  - Kinesis → shards
+  - MSK → topics with partitions
+
+- Encryption:
+  - Kinesis → TLS in-transit enforced by default
+  - MSK → can use TLS or PLAINTEXT (configurable)
+  - Both → KMS encryption at rest
+
+- Security:
+  - Kinesis → IAM-based authentication and authorization
+  - MSK:
+    - mTLS + Kafka ACLs
+    - SASL/SCRAM + Kafka ACLs
+    - IAM Access Control (optional)
+
+WHY:
+- Kinesis is simpler, fully managed, and tightly integrated with AWS
+- MSK provides flexibility, configurability, and Kafka ecosystem compatibility
+
+WHEN TO USE:
+- Kinesis Data Streams:
+  - Default choice in most AWS scenarios
+  - Simple streaming pipelines
+  - Tight AWS integration required
+
+- Amazon MSK:
+  - Large message sizes required (>1MB)
+  - Existing Kafka workloads
+  - Need for custom configuration or Kafka ecosystem
+
+EXAM STRATEGY:
+- Default answer → Kinesis Data Streams
+- Switch to MSK only if:
+  - Large message size is required
+  - Kafka ecosystem is mentioned
+  - Advanced configurability is required
+
+EXAM TRAP:
+- Forgetting Kinesis has a strict 1MB limit
+- Choosing MSK when Kinesis is sufficient
+- Confusing shards (Kinesis) vs partitions (Kafka)
+- Assuming MSK is simpler than Kinesis
+- Missing large message hint in the question","data-ingestion",Medium

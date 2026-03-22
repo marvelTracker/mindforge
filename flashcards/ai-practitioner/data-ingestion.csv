@@ -1,0 +1,63 @@
+id,question,answer,topic,difficulty
+260b9ab4a30e4108a11072b3b9f987af,"What is Amazon FSx, what file system types does it support, and when should each be used in ML/data ingestion systems?","WHAT:
+- Amazon FSx is a fully managed service that allows you to run high-performance, third-party file systems on AWS.
+- It is similar to RDS, but for file systems instead of databases.
+
+SUPPORTED FILE SYSTEMS:
+
+- FSx for Windows File Server:
+  - Windows-native file system (SMB protocol, NTFS)
+  - Integrates with Active Directory (ACLs, user permissions)
+  - Can be mounted on Windows and Linux EC2 instances
+  - Use for enterprise file shares, home directories, CMS
+  - Supports Multi-AZ and daily backups to S3
+
+- FSx for Lustre:
+  - High-performance distributed file system for HPC and ML workloads
+  - Extremely high throughput, millions of IOPS, sub-ms latency
+  - Integrates with S3 (read/write directly)
+  - Two deployment types:
+    - Scratch → temporary, no replication, high performance
+    - Persistent → replicated within AZ, durable
+  - Use for ML training, big data, video processing
+
+- FSx for NetApp ONTAP:
+  - Enterprise-grade file system supporting NFS, SMB, and iSCSI
+  - Compatible with Linux, Windows, macOS, VMware, containers
+  - Features:
+    - Auto-scaling
+    - Snapshots and replication
+    - Data compression and deduplication
+    - Instant cloning
+  - Use for migrating on-prem NAS/ONTAP workloads
+
+- FSx for OpenZFS:
+  - Managed OpenZFS file system (NFS protocol)
+  - High performance (low latency, high IOPS)
+  - Supports snapshots, compression, cloning
+  - No deduplication
+  - Use for workloads already using ZFS or requiring high performance file storage
+
+KEY DIFFERENCES:
+- Windows FSx → enterprise file sharing (SMB, AD integration)
+- Lustre → ML / HPC workloads (performance + S3 integration)
+- ONTAP → enterprise storage migration with advanced features
+- OpenZFS → high-performance NFS workloads
+
+WHY:
+- Provides managed, high-performance file systems without manual setup
+- Enables specialized workloads (ML, HPC, enterprise storage)
+- Integrates with AWS services (especially S3)
+
+WHEN TO USE:
+- FSx Windows → Windows environments, AD integration
+- FSx Lustre → ML training, big data, HPC workloads
+- FSx ONTAP → enterprise NAS migration, multi-protocol workloads
+- FSx OpenZFS → high-performance file storage with NFS
+
+EXAM TRAP:
+- Using EFS instead of FSx for HPC workloads (use Lustre)
+- Forgetting FSx Lustre integrates directly with S3
+- Confusing Windows FSx with EFS (SMB vs NFS)
+- Not distinguishing scratch vs persistent Lustre
+- Missing ONTAP features (deduplication, cloning)","data-ingestion",medium
