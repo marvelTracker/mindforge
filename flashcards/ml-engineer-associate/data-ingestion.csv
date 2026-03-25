@@ -794,6 +794,157 @@ EXAM TRAP:
 - Confusing authentication (who you are) vs authorization (what you can do)
 - Assuming MSK security is as simple as Kinesis
 - Forgetting MSK requires VPC + security group configuration","data-ingestion",Medium
+e3233d10e21e4c1ca7c7890f4f3d85ed,"What is Amazon Athena, how does it work, and when should it be used in data ingestion and analytics pipelines?","WHAT:
+- Amazon Athena is a serverless interactive query service for data stored in Amazon S3
+- It allows querying data using SQL without moving data into a database
+- It acts as a SQL layer on top of a data lake in S3
+
+KEY FEATURES:
+- Serverless:
+  - No infrastructure to manage
+  - No capacity planning required
+- SQL interface:
+  - Query S3 data using standard SQL
+- Pay-per-query:
+  - Charged based on data scanned
+- Supports multiple data formats:
+  - CSV, TSV, JSON (human-readable)
+  - ORC, Parquet (columnar + splittable)
+  - Avro (splittable)
+- Compression support:
+  - Gzip, Snappy, Zlib, etc.
+- Schema-on-read:
+  - Data remains in S3
+  - Schema applied at query time
+
+PERFORMANCE OPTIMIZATION:
+- Use columnar formats:
+  - ORC and Parquet → faster queries
+- Use compression:
+  - Reduces data scanned
+- Partition data:
+  - Improves query efficiency
+
+HOW IT WORKS:
+- Data stored in Amazon S3
+- Schema defined using AWS Glue Data Catalog
+- Athena queries data directly using SQL
+- Results returned without moving data
+
+INTEGRATIONS:
+- AWS Glue:
+  - Metadata catalog for schema
+- Amazon S3:
+  - Data storage
+- Amazon QuickSight:
+  - Visualization
+- JDBC/ODBC:
+  - Connect to external tools
+- Jupyter / Zeppelin / RStudio:
+  - Query as database
+
+WHY:
+- Enables querying large datasets without ETL
+- Eliminates need for data warehouse for exploration
+- Ideal for ad hoc analysis on data lakes
+- Cost-effective for sporadic queries
+
+WHEN TO USE:
+- Querying logs (CloudTrail, ELB, VPC, CloudFront)
+- Ad hoc analysis of data in S3
+- Exploring staging data before loading into warehouse
+- Data lake analytics
+- Lightweight BI queries
+
+WHEN NOT TO USE:
+- High-frequency queries → use Redshift
+- Low-latency transactional workloads → not suitable
+- Complex transformations → use EMR / Glue
+
+EXAM TRAP:
+- Thinking Athena stores data (it queries S3 only)
+- Forgetting schema-on-read concept
+- Not choosing Parquet/ORC for performance
+- Confusing Athena with Redshift (warehouse vs query engine)
+- Ignoring pay-per-data-scanned pricing model","data-ingestion",Medium
+59e114c3fa6b47d69382ee06d96f2a61,"How does Amazon Athena integrate with AWS Glue, and what are its key features around workgroups, cost optimization, and security?","ATHENA + GLUE INTEGRATION:
+- AWS Glue Data Catalog provides schema (tables, columns, partitions) for data in S3
+- Glue crawler scans S3 data and automatically infers schema
+- Athena reads Glue Data Catalog and creates queryable tables
+- Enables schema-on-read for unstructured/semi-structured S3 data
+- Glue Data Catalog acts as a unified metadata repository
+- Compatible with:
+  - Athena
+  - Redshift Spectrum
+  - EMR
+  - RDS
+  - Hive-compatible tools
+
+WHY THIS MATTERS:
+- Converts raw S3 data into SQL-queryable structure
+- Eliminates need for data loading (no ETL required)
+- Enables data lake architecture
+
+ATHENA WORKGROUPS:
+- Logical grouping of users, teams, or workloads
+- Used for:
+  - Access control (IAM-based)
+  - Cost tracking per team/workload
+  - Query limits and governance
+- Features:
+  - Query data scan limits per workgroup
+  - Separate query history per workgroup
+  - Integration with CloudWatch and SNS (alerts)
+  - Custom encryption settings
+- Use case:
+  - Prevent expensive queries
+  - Track cost per department
+
+COST MODEL:
+- Pay-per-query (serverless)
+- ~$5 per TB of data scanned
+- Charged for:
+  - Successful queries
+  - Cancelled queries
+- NOT charged for:
+  - Failed queries
+  - DDL operations (CREATE, ALTER, DROP)
+
+COST OPTIMIZATION:
+- Use columnar formats:
+  - ORC, Parquet → reduce scanned data
+- Use compression:
+  - Gzip, Snappy, etc.
+- Partition data in S3:
+  - e.g., by date/hour
+- Benefit:
+  - 30–90% cost reduction possible
+
+SECURITY:
+- Access control:
+  - IAM policies (Athena, S3)
+  - S3 bucket policies
+- Encryption at rest (query results in S3):
+  - SSE-S3
+  - SSE-KMS
+  - CSE-KMS
+- Encryption in transit:
+  - TLS between Athena and S3
+- Cross-account access:
+  - Enabled via S3 bucket policies
+
+ANTI-PATTERNS:
+- Using Athena for:
+  - ETL → use AWS Glue / EMR instead
+  - Visualization → use QuickSight instead
+- Athena is a query engine, not a processing or BI tool
+
+EXAM TRAPS:
+- Forgetting Glue provides schema (Athena does not infer alone)
+- Ignoring workgroups for cost control
+- Not using Parquet/ORC → higher cost
+- Thinking Athena is free (charged per data scanned)
+- Using Athena for ETL or dashboards (wrong tool)","data-ingestion",Medium
 6f70e6aa7d434a5e829c5591b1f9a111,"How do you choose between Kinesis Data Streams and Amazon MSK in exam scenarios, and what are the key differences?","WHAT:
 - Kinesis Data Streams:
   - AWS-native streaming service
