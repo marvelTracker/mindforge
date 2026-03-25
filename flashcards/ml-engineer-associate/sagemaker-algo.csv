@@ -1,0 +1,1664 @@
+id,question,answer,topic,difficulty
+782ee7107d6b425c95253b0a920cebb8,"What is Amazon SageMaker, what problem does it solve, and how does it manage the end-to-end ML workflow?","WHAT IS SAGEMAKER:
+- Fully managed ML platform on AWS
+- Covers entire ML lifecycle:
+  - Data preparation
+  - Model training
+  - Deployment (inference)
+  - Monitoring and iteration
+
+PROBLEM IT SOLVES:
+- ML workflow is complex and fragmented:
+  - Data engineering
+  - Model training infrastructure
+  - Deployment scaling
+  - Monitoring and retraining
+- SageMaker unifies all these into one platform
+
+ML WORKFLOW (CYCLE):
+1. Data preparation (feature engineering)
+2. Train model
+3. Evaluate model
+4. Deploy model (inference)
+5. Collect new data
+6. Retrain and improve model
+- Continuous improvement loop
+
+ARCHITECTURE:
+
+TRAINING:
+- Input data:
+  - Stored in S3
+- Training code:
+  - Docker image from ECR
+- Compute:
+  - SageMaker provisions training instances
+- Output:
+  - Trained model artifacts stored in S3
+
+INFERENCE (DEPLOYMENT):
+- Inference code:
+  - Docker image from ECR
+- Model:
+  - Loaded from S3
+- Compute:
+  - SageMaker provisions endpoints (EC2-based)
+- Output:
+  - Predictions returned via API endpoint
+
+KEY COMPONENTS:
+- S3 → data storage
+- ECR → container images (training + inference)
+- EC2 → compute (managed by SageMaker)
+- Endpoints → real-time predictions
+
+WAYS TO USE SAGEMAKER:
+- SageMaker Notebooks (Jupyter on EC2)
+- SageMaker Console (UI)
+- SDK / API
+
+CAPABILITIES:
+- Built-in ML algorithms
+- Bring your own model (TensorFlow, PyTorch, etc.)
+- Hyperparameter tuning
+- Auto scaling endpoints
+- Batch transform (offline inference)
+- Real-time inference endpoints
+- Integration with Spark, Athena, EMR
+
+DATA SOURCES:
+- S3 (primary)
+- Athena
+- EMR
+- Redshift
+- Keyspaces
+- Spark integration
+
+DEPLOYMENT OPTIONS:
+- Real-time endpoint:
+  - Low latency predictions
+- Batch transform:
+  - Large-scale offline predictions
+
+ADVANCED FEATURES:
+- Inference pipelines
+- SageMaker Neo (edge deployment)
+- Auto scaling endpoints
+- Shadow testing (compare models)
+
+EXAM TRAPS:
+- Thinking SageMaker is only for training (it is full lifecycle)
+- Forgetting ECR is used for containers
+- Confusing training vs inference containers
+- Not knowing S3 stores both input and model artifacts
+- Ignoring batch vs real-time inference difference
+
+SUMMARY:
+- SageMaker = end-to-end ML platform (data → train → deploy → improve)","sagemaker-algo",Medium
+9ad6acf3ff1548df91584c679d54aea7,"What is the SageMaker Linear Learner algorithm, what problems does it solve, and what are its key characteristics and requirements?","WHAT IS LINEAR LEARNER:
+- Built-in SageMaker algorithm for linear models
+- Based on linear regression concepts
+- Uses a linear function to model relationships
+
+PROBLEM IT SOLVES:
+- Regression:
+  - Predict continuous values
+- Classification:
+  - Binary classification
+  - Multi-class classification
+- Works when data is linearly separable
+
+CORE IDEA:
+- Fits a line (or hyperplane) to data
+- Uses linear threshold for classification
+
+KEY CAPABILITIES:
+- Supports:
+  - Regression
+  - Binary classification
+  - Multi-class classification
+- Trains multiple models in parallel and selects best
+- Uses stochastic gradient descent (SGD)
+- Supports optimizers:
+  - SGD
+  - Adam
+  - Adagrad
+
+INPUT FORMATS:
+- Preferred:
+  - RecordIO-protobuf (Float32)
+- Also supports:
+  - CSV
+    - First column = label
+    - Remaining = features
+
+DATA INGESTION MODES:
+- File mode:
+  - Copies full dataset to each instance
+- Pipe mode:
+  - Streams data from S3
+  - More efficient for large datasets
+
+DATA REQUIREMENTS:
+- Data must be:
+  - Normalized (very important)
+  - Shuffled
+- Normalization:
+  - Can be done manually OR by algorithm
+
+REGULARIZATION:
+- L1:
+  - Feature selection
+- L2 (weight decay):
+  - Prevents overfitting
+
+IMPORTANT HYPERPARAMETERS:
+- Learning rate
+- Batch size
+- L1 regularization
+- L2 regularization (weight decay)
+- Balanced multi-class weights
+- Target precision / recall tuning
+
+PRECISION vs RECALL CONTROL:
+- Can optimize:
+  - Precision at target recall
+  - Recall at target precision
+
+COMPUTE:
+- Supports:
+  - CPU and GPU
+  - Single or multiple machines
+- Important:
+  - Multi-GPU on single machine does NOT help
+
+USE CASES:
+- Simple predictive models
+- Baseline models
+- Linearly separable datasets
+- Even usable for image classification (e.g., MNIST)
+
+LIMITATIONS:
+- Assumes linear relationships
+- Poor performance on non-linear data
+
+EXAM TRAPS:
+- Forgetting normalization requirement
+- Not shuffling data
+- Using file mode for large datasets (inefficient)
+- Thinking it only supports regression (it also does classification)
+- Using it for non-linear problems
+
+SUMMARY:
+- Linear Learner = fast, scalable linear model for regression + classification","sagemaker-algo",Medium
+590d00747fa342dd865e3cc3dddb0cec,"What is the SageMaker XGBoost algorithm, what problems does it solve, and what are its key characteristics, tuning parameters, and performance considerations?","WHAT IS XGBOOST:
+- Extreme Gradient Boosting algorithm
+- Ensemble of decision trees (boosted trees)
+- Builds trees sequentially to correct previous errors
+
+PROBLEM IT SOLVES:
+- Regression:
+  - Predict continuous values
+- Classification:
+  - Binary and multi-class classification
+- Works well on structured/tabular data
+
+CORE IDEA:
+- Boosting:
+  - Each new tree corrects errors of previous trees
+- Uses gradient descent to minimize loss
+
+KEY CHARACTERISTICS:
+- Very high performance and accuracy
+- Widely used in real-world ML (Kaggle winner)
+- Fast and scalable
+- Based on open-source XGBoost
+
+INPUT FORMATS:
+- Supported:
+  - CSV
+  - LibSVM
+  - RecordIO-protobuf
+  - Parquet
+
+USAGE OPTIONS:
+- Built-in SageMaker algorithm (via ECR Docker image)
+- Direct use inside SageMaker notebook (Python library)
+
+MODEL STORAGE:
+- Uses Python pickle for serialization
+
+KEY HYPERPARAMETERS:
+
+OVERFITTING CONTROL:
+- subsample:
+  - Reduces overfitting
+- eta (learning rate):
+  - Smaller = more conservative
+- max_depth:
+  - Deeper trees → risk of overfitting
+
+REGULARIZATION:
+- alpha:
+  - L1 regularization
+- lambda:
+  - L2 regularization
+- gamma:
+  - Minimum loss reduction for splits
+
+IMBALANCED DATA:
+- scale_pos_weight:
+  - Balances positive vs negative classes
+  - Important for skewed datasets
+
+EVALUATION:
+- eval_metric:
+  - error, RMSE, AUC, etc.
+  - Defines optimization objective
+
+GPU TRAINING:
+- Supported (newer versions)
+- Enable with:
+  - tree_method = gpu_hist
+
+DISTRIBUTED GPU TRAINING:
+- Requires:
+  - tree_method = gpu_hist
+  - use_dask_gpu_training = true
+  - distribution = fully_replicated
+- Supported formats:
+  - CSV, Parquet
+
+PERFORMANCE CHARACTERISTICS:
+- CPU training:
+  - Memory-bound (not compute-bound)
+  - Use memory-optimized instances (e.g., M5)
+- GPU training:
+  - Faster and more cost-efficient
+
+USE CASES:
+- Tabular datasets
+- Structured data problems
+- Fraud detection
+- Ranking/classification tasks
+
+LIMITATIONS:
+- Requires careful hyperparameter tuning
+- Many parameters → harder to optimize
+
+EXAM TRAPS:
+- Forgetting it supports both regression and classification
+- Ignoring overfitting controls (eta, subsample, max_depth)
+- Not using scale_pos_weight for imbalanced data
+- Assuming CPU is compute-bound (it is memory-bound)
+- Forgetting GPU option (gpu_hist)
+
+SUMMARY:
+- XGBoost = powerful boosted tree algorithm for structured data with strong performance","sagemaker-algo",Medium
+c5cd347a03434962aa13bb29ecfe681a,"What is the SageMaker Seq2Seq algorithm, what problem does it solve, and what are its key characteristics, inputs, use cases, and performance considerations?","WHAT IS SEQ2SEQ:
+- Sequence-to-sequence deep learning model
+- Takes a sequence of tokens as input
+- Outputs another sequence of tokens
+
+PROBLEM IT SOLVES:
+- Transform one sequence into another:
+  - Text → translated text
+  - Document → summary
+  - Audio → text
+
+CORE IDEA:
+- Input:
+  - Sequence of tokens (words, audio tokens, etc.)
+- Output:
+  - Transformed sequence
+
+COMMON USE CASES:
+- Machine translation
+- Text summarization
+- Speech-to-text
+
+MODEL ARCHITECTURE:
+- Can use:
+  - RNNs (Recurrent Neural Networks)
+  - CNNs with attention mechanisms
+
+INPUT FORMAT:
+- RecordIO-Protobuf (required)
+- Tokens must be integers
+- Requires:
+  - Tokenized input data
+  - Vocabulary file (word → index mapping)
+
+DATA REQUIREMENTS:
+- Cannot use raw text
+- Must:
+  - Tokenize text
+  - Convert words to numeric indices
+  - Provide vocabulary mapping
+
+TRAINING INPUT:
+- Training dataset
+- Validation dataset
+- Vocabulary file
+
+PRE-TRAINED MODELS:
+- Available for common tasks (e.g. translation)
+- Public datasets available
+
+KEY HYPERPARAMETERS:
+- batch_size
+- optimizer:
+  - Adam / SGD / RMSProp
+- learning_rate
+- number of layers
+
+EVALUATION METRICS:
+- BLEU score:
+  - Compares output with multiple references
+- Perplexity:
+  - Measures prediction uncertainty (cross-entropy)
+
+PERFORMANCE CHARACTERISTICS:
+- Very computationally expensive
+- Training can take days
+
+INSTANCE TYPES:
+- GPU required:
+  - Prefer P3 / GPU instances
+- Single-machine training only:
+  - Cannot distribute across multiple machines
+- Can use:
+  - Multiple GPUs on one machine
+
+LIMITATIONS:
+- No distributed training across nodes
+- Requires heavy preprocessing (tokenization)
+- High compute cost
+
+EXAM TRAPS:
+- Feeding raw text instead of tokenized input
+- Forgetting vocabulary file requirement
+- Using CPU instead of GPU
+- Not knowing BLEU/perplexity metrics
+- Assuming distributed training is supported
+
+SUMMARY:
+- Seq2Seq = deep learning model for transforming sequences (e.g. translation, summarization)","sagemaker-algo",Medium
+336ceb08819f4703be44d0ef9036fcfc,"What is the SageMaker BlazingText algorithm, what problem does it solve, and what are its key modes, inputs, use cases, and performance considerations?","WHAT IS BLAZINGTEXT:
+- NLP algorithm in SageMaker
+- Limited scope (not full NLP system)
+
+PROBLEM IT SOLVES:
+- Text classification
+- Word embeddings (word2vec)
+
+CORE MODES:
+
+TEXT CLASSIFICATION:
+- Supervised learning
+- Input:
+  - Sentences with labels
+- Output:
+  - Predicted label for sentence
+
+WORD2VEC:
+- Unsupervised learning
+- Learns word embeddings
+- Maps words to vectors:
+  - Similar words → close vectors
+
+KEY USE CASES:
+- Text classification:
+  - Search ranking
+  - Categorization
+- Word embeddings:
+  - Input to other NLP models
+
+IMPORTANT LIMITATIONS:
+- Works on sentences (not full documents)
+- Word2Vec works on words only (not sentences)
+
+INPUT FORMAT:
+
+TEXT CLASSIFICATION:
+- One sentence per line
+- Format:
+  - __label__<label> sentence
+- Requirements:
+  - Tokenized text
+  - Lowercased
+  - Spaces around punctuation
+
+WORD2VEC:
+- One sentence per line
+- Tokenized text only
+
+ALTERNATIVE FORMAT:
+- Augmented manifest format:
+  - Structured JSON-like format
+
+WORD2VEC MODES:
+
+CBOW (Continuous Bag of Words):
+- Ignores word order
+- Treats text as unordered words
+
+SKIP-GRAM:
+- Considers word order
+- Learns word relationships
+
+BATCH SKIP-GRAM:
+- Distributed version
+- Supports multi-machine training
+- CPU only
+
+KEY HYPERPARAMETERS:
+
+WORD2VEC:
+- mode (cbow / skip-gram / batch skip-gram)
+- learning_rate
+- window_size
+- vector_dim
+- negative_samples
+
+TEXT CLASSIFICATION:
+- epochs
+- learning_rate
+- word_ngrams
+- vector_dim
+
+PERFORMANCE CHARACTERISTICS:
+
+TEXT CLASSIFICATION:
+- CPU or GPU
+- Small data:
+  - Use C5
+- Larger data:
+  - Use P2 / P3
+
+WORD2VEC:
+- CBOW / SKIP-GRAM:
+  - GPU supported
+  - Single machine only
+- BATCH SKIP-GRAM:
+  - Multi-machine CPU only
+
+LIMITATIONS:
+- Cannot process full documents
+- Limited NLP capabilities
+- Requires preprocessing (tokenization)
+
+EXAM TRAPS:
+- Thinking it's full NLP system (it's limited)
+- Using documents instead of sentences
+- Confusing word2vec with classification
+- Forgetting input format (__label__)
+- Not knowing CBOW vs skip-gram differences
+
+SUMMARY:
+- BlazingText = fast NLP tool for text classification + word embeddings (word2vec)","sagemaker-algo",Medium
+39c60c59b6be4f3aaf8aa82b5ef2d5e1,"What is the SageMaker Object2Vec algorithm, what problem does it solve, and what are its key characteristics, inputs, use cases, and performance considerations?","WHAT IS OBJECT2VEC:
+- General-purpose embedding algorithm
+- Extension of Word2Vec
+- Works on arbitrary objects (not just words)
+
+PROBLEM IT SOLVES:
+- Learns similarity between objects
+- Converts high-dimensional objects into dense vectors
+
+CORE IDEA:
+- Embedding model:
+  - Similar objects → close vectors
+- Reduces dimensionality:
+  - Complex objects → low-dimensional representation
+
+KEY DIFFERENCE VS WORD2VEC:
+- Word2Vec:
+  - Works on words only
+- Object2Vec:
+  - Works on any objects:
+    - Documents
+    - Users
+    - Items
+    - Products
+
+INPUT REQUIREMENTS:
+- Must be tokenized into integers
+- Input is:
+  - Pairs of sequences or tokens
+
+INPUT STRUCTURE:
+- Two input channels:
+  - Object A
+  - Object B
+- Examples:
+  - User → item
+  - Product → product
+  - Sentence → sentence
+  - Label → sequence
+
+MODEL ARCHITECTURE:
+- Two parallel encoders:
+  - Encoder 1 (Object A)
+  - Encoder 2 (Object B)
+- Encoded outputs compared via:
+  - Comparator
+- Followed by:
+  - Feedforward neural network
+
+ENCODER OPTIONS:
+- Average pooled embeddings
+- CNN (Convolutional Neural Network)
+- Bi-directional LSTM
+
+USE CASES:
+- Recommendation systems:
+  - Similar users
+  - Similar items
+- Clustering:
+  - Group similar objects
+- Nearest neighbor search
+- Genre prediction
+- Similarity detection
+
+KEY HYPERPARAMETERS:
+- epochs
+- batch_size
+- learning_rate
+- dropout
+- early stopping
+- number of layers
+- activation function
+- optimizer
+- weight decay
+
+ENCODER SETTINGS:
+- encoder_1_network
+- encoder_2_network
+  - Defines encoder type per input
+
+PERFORMANCE CHARACTERISTICS:
+- Deep learning model
+- Computationally intensive
+
+INSTANCE TYPES:
+
+TRAINING:
+- Single machine only
+- CPU or GPU supported
+- Recommended:
+  - CPU: ml.m5.2xlarge
+  - GPU: ml.p2.xlarge
+
+SCALING:
+- Can use multi-GPU (single machine)
+- Cannot distribute across multiple machines
+
+INFERENCE:
+- CPU or GPU supported
+- Recommended:
+  - ml.p3.2xlarge
+- Use:
+  - inference_preferred_mode for optimization
+
+LIMITATIONS:
+- Requires paired input data
+- Requires tokenization
+- No distributed training across nodes
+
+EXAM TRAPS:
+- Confusing with Word2Vec (Object2Vec is general)
+- Forgetting input is pairs of objects
+- Feeding raw data instead of tokenized integers
+- Assuming multi-machine training
+- Not recognizing recommendation system use case
+
+SUMMARY:
+- Object2Vec = embedding model for learning similarity between arbitrary objects","sagemaker-algo",Medium
+80d150f268c349f6bea4c76c1ccc107a,"What is the SageMaker Image Classification algorithm, how does it differ from object detection, and what are its key characteristics, modes, inputs, and performance considerations?","WHAT IS IMAGE CLASSIFICATION:
+- Assigns labels to an image
+- Identifies WHAT is in the image
+- Does NOT identify location of objects
+
+DIFFERENCE VS OBJECT DETECTION:
+- Image Classification:
+  - Outputs labels only
+  - Example: ""cat""
+- Object Detection:
+  - Outputs labels + bounding boxes
+  - Example: ""cat at (x,y)""
+
+PROBLEM IT SOLVES:
+- Identify objects present in an image
+- Multi-label classification possible
+
+FRAMEWORK VARIANTS:
+- MXNet version
+- TensorFlow version
+- Treated as separate implementations in SageMaker
+
+MXNET MODES:
+- Full training:
+  - Random weight initialization
+- Transfer learning:
+  - Uses pre-trained weights
+  - Final layer initialized randomly
+  - Fine-tunes model on new data
+
+TRANSFER LEARNING:
+- Allows reuse of pre-trained models
+- Adapt to new object classes
+
+INPUT CHARACTERISTICS:
+- Images (RGB)
+- Default MXNet input size:
+  - 224 x 224 x 3 (ImageNet standard)
+
+TENSORFLOW VERSION:
+- Uses models from TensorFlow Hub:
+  - MobileNet
+  - ResNet
+  - Inception
+  - EfficientNet
+- Model-specific configurations vary
+
+MODEL CAPABILITY:
+- Can fine-tune classification layer
+- Extend to new object classes
+
+KEY HYPERPARAMETERS:
+- batch_size
+- learning_rate
+- optimizer
+
+OPTIMIZER PARAMETERS:
+- weight_decay
+- beta1
+- beta2
+- epsilon
+- gamma
+
+PERFORMANCE CHARACTERISTICS:
+- Deep learning model
+- Compute intensive
+
+INSTANCE TYPES:
+
+TRAINING:
+- Requires GPU
+- Recommended:
+  - ml.p2
+  - ml.p3
+  - ml.g4
+  - ml.g5
+- Supports:
+  - Multi-GPU
+  - Multi-instance distributed training
+
+INFERENCE:
+- CPU or GPU supported
+- Options:
+  - ml.m5 (CPU)
+  - ml.p2 / p3 / g4 / g5 (GPU)
+
+SCALING:
+- Highly scalable across instances and GPUs
+
+USE CASES:
+- Image labeling
+- Content moderation
+- Visual search
+- Medical imaging classification
+
+LIMITATIONS:
+- Does NOT provide object location
+- Requires labeled training data
+
+EXAM TRAPS:
+- Confusing with object detection (location vs label)
+- Forgetting transfer learning mode
+- Not recognizing MXNet vs TensorFlow difference
+- Assuming it outputs bounding boxes
+- Ignoring GPU requirement for training
+
+SUMMARY:
+- Image Classification = WHAT is in the image (not WHERE)","sagemaker-algo",Medium
+0d9fd11a3d7d46299d04fcb38c7087b3,"What is the SageMaker Object Detection algorithm, what problem does it solve, and what are its key characteristics, inputs, models, and performance considerations?","WHAT IS OBJECT DETECTION:
+- Detects and classifies objects in an image
+- Identifies WHAT is in the image AND WHERE it is
+- Outputs bounding boxes, labels, and confidence scores
+
+PROBLEM IT SOLVES:
+- Identify multiple objects in images
+- Determine location of each object
+- Used in real-world visual understanding tasks
+
+OUTPUT:
+- Object labels
+- Bounding box coordinates
+- Confidence scores
+
+DIFFERENCE VS IMAGE CLASSIFICATION:
+- Object Detection:
+  - WHAT + WHERE
+- Image Classification:
+  - WHAT only
+
+FRAMEWORK VARIANTS:
+- MXNet version (original)
+- TensorFlow version (model selection flexibility)
+
+MXNET VERSION:
+- Uses CNN with SSD (Single Shot Multibox Detector)
+- Backbone models:
+  - VGG16
+  - ResNet-50
+
+TRAINING MODES:
+- Full training (random weights)
+- Transfer learning (pre-trained ImageNet weights)
+- Incremental training supported
+
+REGULARIZATION:
+- Uses:
+  - Flip
+  - Rescale
+  - Jitter
+- Helps prevent overfitting
+
+TENSORFLOW VERSION:
+- Uses TensorFlow Model Garden
+- Model choices include:
+  - ResNet
+  - EfficientNet
+  - MobileNet
+- Configuration depends on selected model
+
+INPUT FORMAT (MXNET):
+- Image formats:
+  - JPEG
+  - PNG
+- OR:
+  - RecordIO format
+
+ANNOTATIONS:
+- Requires labeled data with bounding boxes
+- JSON annotation file per image:
+  - Image size
+  - Object categories
+  - Bounding box coordinates
+
+INPUT FORMAT (TENSORFLOW):
+- Depends on chosen model
+- More flexible but model-specific
+
+KEY HYPERPARAMETERS:
+- batch_size / minibatch_size
+- learning_rate
+- optimizer
+
+PERFORMANCE CHARACTERISTICS:
+- Deep learning model
+- Highly compute intensive
+
+INSTANCE TYPES:
+
+TRAINING:
+- Requires GPU
+- Recommended:
+  - ml.p2.xlarge
+  - ml.p3.2xlarge
+- Supports:
+  - Multi-GPU
+  - Multi-instance distributed training
+- Also supports:
+  - ml.g4
+  - ml.g5
+
+INFERENCE:
+- CPU or GPU supported
+- CPU:
+  - ml.m5
+- GPU:
+  - ml.p2 / p3 / g4
+
+USE CASES:
+- Autonomous vehicles
+- Surveillance systems
+- Retail analytics
+- Medical imaging
+
+LIMITATIONS:
+- Requires labeled bounding box data
+- More complex than classification
+- Higher compute cost
+
+EXAM TRAPS:
+- Confusing with image classification
+- Forgetting bounding boxes requirement
+- Ignoring annotation format (JSON)
+- Not knowing SSD is used in MXNet version
+- Assuming only classification output
+
+SUMMARY:
+- Object Detection = WHAT + WHERE (labels + bounding boxes)","sagemaker-algo",Medium
+db27d03bb7da4403b199cfaa3a461c20,"What is the SageMaker Random Cut Forest algorithm, what problem does it solve, and what are its key characteristics, inputs, and performance considerations?","WHAT IS RANDOM CUT FOREST:
+- AWS algorithm for anomaly detection
+- Unsupervised learning algorithm
+- Detects unusual or anomalous data points
+
+PROBLEM IT SOLVES:
+- Identify anomalies in datasets
+- Detect outliers, unusual patterns, or breaks in trends
+- Works well for time series and streaming data
+
+OUTPUT:
+- Assigns anomaly score to each data point
+- Higher score = more anomalous
+
+KEY CHARACTERISTICS:
+- Unsupervised (no labels required)
+- Works on sequential or time series data
+- Can detect:
+  - Breaks in periodicity
+  - Unusual patterns
+  - Rare events
+
+HOW IT WORKS:
+- Builds a forest of random decision trees
+- Each tree partitions data randomly
+- Measures impact of inserting a new data point:
+  - If many new branches are needed → anomaly
+- Based on change in tree complexity
+
+RANDOM CUT CONCEPT:
+- Data is randomly partitioned
+- Trees are constructed using random splits
+- Ensemble of trees improves robustness
+
+INPUT FORMAT:
+- CSV
+- RecordIO protobuf
+
+DATA MODES:
+- File mode (full dataset copied)
+- Pipe mode (streamed from S3)
+
+OPTIONAL TEST CHANNEL:
+- Can evaluate performance using labeled data
+- Metrics:
+  - Accuracy
+  - Precision
+  - Recall
+  - F1 score
+
+USE CASES:
+- Fraud detection
+- System monitoring
+- Network intrusion detection
+- IoT anomaly detection
+- Time series anomaly detection
+
+STREAMING SUPPORT:
+- Integrated with Kinesis Analytics
+- Works on real-time streaming data
+
+KEY HYPERPARAMETERS:
+- num_trees:
+  - More trees → less noise
+- num_samples_per_tree:
+  - Should approximate inverse anomaly ratio
+  - Helps tune sensitivity
+
+PERFORMANCE CHARACTERISTICS:
+- Lightweight compared to deep learning
+- Does NOT use GPUs
+
+INSTANCE TYPES:
+
+TRAINING:
+- CPU only
+- Recommended:
+  - ml.m4
+  - ml.c4
+  - ml.c5
+
+INFERENCE:
+- Recommended:
+  - ml.c5.xlarge
+
+ADVANTAGES:
+- No labeled data required
+- Scalable
+- Works on streaming and batch data
+
+LIMITATIONS:
+- Does not provide classification labels
+- Requires tuning for anomaly ratio
+
+EXAM TRAPS:
+- Thinking it is supervised (it is unsupervised)
+- Confusing with classification algorithms
+- Assuming GPU usage (CPU only)
+- Forgetting anomaly score output
+- Not recognizing it works with streaming (Kinesis)
+
+SUMMARY:
+- Random Cut Forest = AWS anomaly detection algorithm (unsupervised)","sagemaker-algo",Medium
+bad263dca1744b778fa2fa7aced51a15,"What is the SageMaker Neural Topic Model algorithm, what problem does it solve, and what are its key characteristics, inputs, and performance considerations?","WHAT IS NEURAL TOPIC MODEL:
+- Unsupervised algorithm for topic modeling
+- Identifies abstract topics within a collection of documents
+
+PROBLEM IT SOLVES:
+- Discover hidden themes in documents
+- Group documents by underlying topics
+- Useful for document organization and summarization
+
+KEY CHARACTERISTICS:
+- Unsupervised (no labeled data required)
+- Topics are latent (not human-readable labels)
+- Groups related words into abstract concepts
+
+EXAMPLE:
+- Words like:
+  - bike, car, train, speed, mileage
+- May form a topic:
+  - ""transportation"" (interpreted by humans)
+
+OUTPUT:
+- Topic distribution per document
+- Word distribution per topic
+
+HOW IT WORKS:
+- Uses neural variational inference
+- Learns latent representations of topics
+- Extracts patterns based on word co-occurrence
+
+INPUT REQUIREMENTS:
+- Tokenized documents (words converted to integers)
+- Vocabulary file mapping words to indices
+
+INPUT FORMAT:
+- CSV
+- RecordIO protobuf
+
+DATA STRUCTURE:
+- Each document represented as:
+  - Word count vector over vocabulary
+- Vocabulary provided via auxiliary channel
+
+DATA MODES:
+- File mode
+- Pipe mode (faster)
+
+OPTIONAL CHANNELS:
+- Validation / test channel (for evaluation)
+
+KEY HYPERPARAMETERS:
+- num_topics:
+  - Number of topics to generate
+  - Controls abstraction level
+- batch_size
+- learning_rate
+
+TOPIC BEHAVIOR:
+- Topics are not explicitly named
+- Must be interpreted based on top words
+
+USE CASES:
+- Document clustering
+- Topic discovery
+- Content recommendation
+- Text summarization
+
+PERFORMANCE CHARACTERISTICS:
+- Neural network based
+- Requires tokenized input
+- Works on large document collections
+
+INSTANCE TYPES:
+
+TRAINING:
+- GPU recommended (neural network)
+- CPU also supported
+
+INFERENCE:
+- CPU usually sufficient
+
+LIMITATIONS:
+- Topics are not human-readable
+- Requires preprocessing (tokenization + vocabulary)
+- Requires tuning number of topics
+
+EXAM TRAPS:
+- Thinking it is supervised (it is unsupervised)
+- Expecting human-readable topic names
+- Confusing with classification algorithms
+- Forgetting tokenization requirement
+- Ignoring need for vocabulary file
+
+SUMMARY:
+- Neural Topic Model = unsupervised topic discovery from documents","sagemaker-algo",Medium
+6e76953c1f5040ff990345fecae06c0f,"What is the SageMaker KNN (K-Nearest Neighbors) algorithm, what problem does it solve, and what are its key characteristics, inputs, and performance considerations?","WHAT IS KNN:
+- K-Nearest Neighbors algorithm
+- Simple instance-based (lazy) learning algorithm
+- No explicit model training (stores data)
+
+PROBLEM IT SOLVES:
+- Classification:
+  - Predict label based on nearest neighbors
+- Regression:
+  - Predict value using average of nearest neighbors
+
+HOW IT WORKS:
+- Compute distance between input point and training data
+- Select K nearest data points
+- Classification:
+  - Majority vote of labels
+- Regression:
+  - Average of values
+
+KEY CHARACTERISTICS:
+- Non-parametric
+- Distance-based learning
+- Sensitive to feature scaling
+- Works in feature space
+
+INPUT FORMAT:
+- CSV:
+  - First column = label
+  - Remaining columns = features
+- RecordIO protobuf
+
+DATA MODES:
+- File mode
+- Pipe mode
+
+OPTIONAL CHANNELS:
+- Test channel for evaluation
+
+SAGEMAKER ENHANCEMENTS:
+- Automatic data sampling
+- Dimensionality reduction:
+  - Reduces feature space
+  - Mitigates curse of dimensionality
+- Builds fast lookup index for inference
+
+KEY HYPERPARAMETERS:
+- k:
+  - Number of neighbors
+  - Most important parameter
+- sample_size:
+  - Controls amount of training data used
+- dimension reduction method:
+  - Options include:
+    - sign
+    - faiss
+
+PERFORMANCE CHARACTERISTICS:
+- High memory usage (stores data)
+- Slower inference for large datasets
+- No real training phase (lazy learning)
+
+INSTANCE TYPES:
+
+TRAINING:
+- CPU:
+  - ml.m5.2xlarge
+- GPU:
+  - ml.p2.xlarge
+
+INFERENCE:
+- CPU:
+  - Lower latency
+- GPU:
+  - Higher throughput
+
+USE CASES:
+- Recommendation systems
+- Similarity search
+- Pattern matching
+- Baseline models
+
+LIMITATIONS:
+- Poor scalability with large datasets
+- Sensitive to noise
+- Curse of dimensionality
+- Requires feature normalization
+
+EXAM TRAPS:
+- Thinking KNN requires heavy training (it does not)
+- Forgetting it can do regression
+- Ignoring importance of K parameter
+- Not knowing SageMaker adds sampling + dimensionality reduction
+- Confusing latency vs throughput (CPU vs GPU)
+
+SUMMARY:
+- KNN = simple distance-based algorithm using nearest neighbors for prediction","sagemaker-algo",Medium
+67e6d15411784da4868b5552a1e3a595,"What is the SageMaker PCA (Principal Component Analysis) algorithm, what problem does it solve, and what are its key characteristics, inputs, and performance considerations?","WHAT IS PCA:
+- Principal Component Analysis
+- Dimensionality reduction algorithm
+- Unsupervised learning technique
+
+PROBLEM IT SOLVES:
+- Reduces number of features in dataset
+- Mitigates curse of dimensionality
+- Simplifies high-dimensional data
+
+HOW IT WORKS:
+- Projects high-dimensional data into lower-dimensional space
+- Preserves maximum variance (information)
+- Creates new features called principal components
+
+PRINCIPAL COMPONENTS:
+- First component:
+  - Captures highest variance
+- Second component:
+  - Captures next highest variance
+- Components are orthogonal (independent)
+
+KEY CHARACTERISTICS:
+- Unsupervised (no labels required)
+- Feature extraction (not feature selection)
+- Transforms data into new feature space
+- Components may not be interpretable
+
+INPUT FORMAT:
+- CSV
+- RecordIO protobuf
+
+DATA MODES:
+- File mode
+- Pipe mode
+
+CHANNELS:
+- Train channel (required)
+
+SAGEMAKER MODES:
+
+REGULAR MODE:
+- Used for:
+  - Sparse data
+  - Moderate datasets
+
+RANDOMIZED MODE:
+- Used for:
+  - Large datasets
+- Uses approximation algorithm
+- More scalable
+
+UNDER THE HOOD:
+- Computes covariance matrix
+- Uses Singular Value Decomposition (SVD)
+
+KEY HYPERPARAMETERS:
+- algorithm_mode:
+  - regular
+  - randomized
+- subtract_mean:
+  - Centers data
+  - Removes bias
+
+PERFORMANCE CHARACTERISTICS:
+- Reduces computational cost for downstream models
+- Helps improve model performance
+- Trade-off between dimensionality and information loss
+
+INSTANCE TYPES:
+
+TRAINING:
+- CPU or GPU supported
+- Choice depends on dataset size and performance needs
+
+INFERENCE:
+- CPU or GPU supported
+
+USE CASES:
+- Data visualization (2D/3D projection)
+- Feature preprocessing
+- Noise reduction
+- Speeding up training
+
+LIMITATIONS:
+- Loss of interpretability
+- Possible information loss
+- Assumes linear relationships
+
+EXAM TRAPS:
+- Confusing with feature selection
+- Thinking PCA uses labels (it does not)
+- Forgetting it creates new features
+- Not knowing it maximizes variance
+- Ignoring SVD under the hood
+
+SUMMARY:
+- PCA = dimensionality reduction by projecting data into components that maximize variance","sagemaker-algo",Medium
+18fe20d439ec4cc8818417403443f544,"What are SageMaker Factorization Machines, what problem do they solve, and what are their key characteristics, inputs, and performance considerations?","WHAT ARE FACTORIZATION MACHINES:
+- Supervised learning algorithm
+- Supports:
+  - Classification
+  - Regression
+- Designed for sparse data
+
+PROBLEM IT SOLVES:
+- Handles sparse datasets
+- Predicts interactions between entities
+- Common in recommender systems
+
+SPARSE DATA:
+- Most feature values are missing or zero
+- Example:
+  - Users interact with few items out of many
+- Typical domains:
+  - Recommendations
+  - Ad click prediction
+
+HOW IT WORKS:
+- Models pairwise interactions between features
+- Uses matrix factorization
+- Predicts missing values in sparse matrix
+
+MATRIX REPRESENTATION:
+- Data represented as matrix:
+  - Rows: users
+  - Columns: items
+- Most entries are empty (sparse)
+- Learns latent factors to fill missing values
+
+KEY CHARACTERISTICS:
+- Works on pairwise feature interactions
+- Efficient for large sparse datasets
+- Learns hidden relationships between features
+
+INPUT FORMAT:
+- RecordIO protobuf (Float32)
+- CSV not suitable due to sparsity
+
+DATA MODES:
+- File mode
+- Pipe mode
+
+CHANNELS:
+- Train channel (required)
+- Test channel (optional)
+
+USE CASES:
+- Recommender systems
+- Product recommendations
+- Ad click prediction
+- User-item interaction modeling
+
+KEY HYPERPARAMETERS:
+- bias_init:
+  - Initialization of bias terms
+- linear_init:
+  - Initialization of linear terms
+- factor_init:
+  - Initialization of interaction factors
+- Initialization methods:
+  - uniform
+  - normal
+  - constant
+
+PERFORMANCE CHARACTERISTICS:
+- Optimized for sparse data
+- Efficient memory usage
+- Captures feature interactions
+
+INSTANCE TYPES:
+
+TRAINING:
+- CPU recommended:
+  - ml.m5
+- GPU not recommended for sparse data
+
+INFERENCE:
+- CPU or GPU supported
+
+LIMITATIONS:
+- Only models pairwise interactions
+- Not ideal for dense datasets
+- Requires proper encoding of features
+
+EXAM TRAPS:
+- Using it for dense data (wrong)
+- Thinking CSV is valid input (not practical)
+- Forgetting it is supervised
+- Missing recommender system use case
+- Not knowing it models pairwise interactions
+
+SUMMARY:
+- Factorization Machines = supervised algorithm for sparse data and recommender systems using matrix factorization","sagemaker-algo",Medium
+1c441b10f22b4f9d8e1b9d20e2ac15ff,"What is the SageMaker IP Insights algorithm, what problem does it solve, and what are its key characteristics, inputs, and performance considerations?","WHAT IS IP INSIGHTS:
+- Unsupervised anomaly detection algorithm
+- Designed for analyzing IP address behavior
+- Used for security and fraud detection
+
+PROBLEM IT SOLVES:
+- Detects suspicious or anomalous IP activity
+- Identifies unusual login or access patterns
+- Flags abnormal entity-IP relationships
+
+USE CASES:
+- Fraud detection
+- Suspicious login detection
+- Account takeover detection
+- Resource abuse monitoring
+
+HOW IT WORKS:
+- Learns patterns of entity-IP interactions
+- Identifies deviations from normal behavior
+- Assigns anomaly scores to entity-IP pairs
+
+KEY CHARACTERISTICS:
+- Unsupervised learning
+- Works directly with entity and IP data
+- No heavy preprocessing required
+
+INPUT FORMAT:
+- CSV only
+- Format:
+  - entity_id, IP_address
+
+ENTITY:
+- Can be:
+  - username
+  - account ID
+  - session ID
+
+CHANNELS:
+- Train channel (required)
+- Validation channel (optional)
+
+VALIDATION:
+- Can compute AUC (Area Under Curve)
+
+UNDER THE HOOD:
+- Neural network based
+- Uses embeddings for:
+  - entities
+  - IP addresses
+- Learns latent vector representations
+
+NEGATIVE SAMPLING:
+- Automatically generates anomalies
+- Random entity-IP pairings
+- Helps model learn abnormal patterns
+
+KEY HYPERPARAMETERS:
+- num_entity_vectors:
+  - Number of entity embeddings
+- hash_size:
+  - Size of hash space
+  - Recommended:
+    - ~2 × number of unique entities
+- vector_dim:
+  - Embedding size
+  - Larger values risk overfitting
+
+NEURAL NETWORK PARAMETERS:
+- epochs
+- learning_rate
+- batch_size
+
+PERFORMANCE CHARACTERISTICS:
+- Handles highly unbalanced data
+- Learns complex interaction patterns
+- Suitable for real-time anomaly detection
+
+INSTANCE TYPES:
+
+TRAINING:
+- GPU recommended:
+  - ml.p3.2xlarge or higher
+- Supports multi-GPU on single instance
+- CPU possible but less efficient
+
+INFERENCE:
+- CPU or GPU supported
+
+LIMITATIONS:
+- Requires sufficient data volume
+- Sensitive to embedding size tuning
+- May overfit with large vector dimensions
+
+EXAM TRAPS:
+- Thinking it is supervised (it is not)
+- Forgetting input is ONLY CSV
+- Ignoring entity-IP pair structure
+- Not knowing it uses neural network embeddings
+- Missing negative sampling concept
+
+SUMMARY:
+- IP Insights = unsupervised anomaly detection for entity-IP relationships using neural network embeddings","sagemaker-algo",Medium
+3277050000994088876f1051d0349b59,"What is the SageMaker Semantic Segmentation algorithm, what problem does it solve, and how does it differ from image classification and object detection?","WHAT IS SEMANTIC SEGMENTATION:
+- Computer vision algorithm
+- Performs pixel-level classification
+- Assigns a label to every pixel in an image
+
+PROBLEM IT SOLVES:
+- Identifies objects at fine-grained level
+- Determines exact shape and boundaries of objects
+- Provides detailed scene understanding
+
+OUTPUT:
+- Segmentation mask:
+  - Each pixel mapped to a class label
+
+DIFFERENCE VS OTHER VISION MODELS:
+
+IMAGE CLASSIFICATION:
+- Outputs:
+  - WHAT is in image
+
+OBJECT DETECTION:
+- Outputs:
+  - WHAT + WHERE (bounding boxes)
+
+SEMANTIC SEGMENTATION:
+- Outputs:
+  - WHAT + EXACT WHERE (pixel-level)
+
+USE CASES:
+- Autonomous driving
+- Medical imaging
+- Robotics
+- Scene understanding
+
+INPUT FORMAT:
+- Images:
+  - JPEG
+  - PNG
+- Requires:
+  - Annotation masks
+  - Label maps
+- Supports:
+  - Augmented manifest format
+
+CHANNELS:
+- Train channel (required)
+- Validation channel (required)
+
+INFERENCE INPUT:
+- JPEG image
+
+UNDER THE HOOD:
+- Built on:
+  - Gluon / GluonCV
+  - Apache MXNet
+
+SUPPORTED ALGORITHMS:
+- FCN (Fully Convolutional Network)
+- PSP (Pyramid Scene Parsing)
+- DeepLab v3
+
+BACKBONE NETWORKS:
+- ResNet-50
+- ResNet-101
+- Pre-trained on ImageNet
+
+TRAINING MODES:
+- Train from scratch
+- Transfer learning (ImageNet)
+- Incremental training supported
+
+KEY HYPERPARAMETERS:
+- epochs
+- learning_rate
+- batch_size
+- optimizer
+- algorithm choice (FCN / PSP / DeepLab)
+- backbone (ResNet-50 / 101)
+
+PERFORMANCE CHARACTERISTICS:
+- Highly compute intensive
+- Requires large labeled datasets
+- Provides highest spatial accuracy
+
+INSTANCE TYPES:
+
+TRAINING:
+- GPU only:
+  - ml.p2
+  - ml.p3
+  - ml.g4
+  - ml.g5
+- Single machine only
+
+INFERENCE:
+- CPU:
+  - ml.c5
+  - ml.m5
+- GPU:
+  - ml.p3
+  - ml.g4
+
+LIMITATIONS:
+- Requires pixel-level annotations (expensive)
+- High computational cost
+- More complex than detection/classification
+
+EXAM TRAPS:
+- Confusing with object detection
+- Forgetting pixel-level output
+- Not knowing segmentation mask concept
+- Thinking CPU can be used for training (GPU only)
+- Ignoring annotation requirements
+
+SUMMARY:
+- Semantic Segmentation = pixel-level classification (WHAT + EXACT WHERE)","sagemaker-algo",Medium
+4208eefc450f44d7b99b9d60af420c60,"What are the key SageMaker built-in algorithms, how are they categorized, and what is one clear use case for each?","CATEGORIES OVERVIEW:
+
+SUPERVISED LEARNING:
+- Linear Learner → Regression + Classification (linear problems)
+  - Use case: Predict house prices based on size
+
+- XGBoost → Regression + Classification (tabular, high accuracy)
+  - Use case: Credit risk prediction (loan approval)
+
+- LightGBM → Regression + Classification (fast boosting)
+  - Use case: Predict customer churn
+
+- KNN → Classification + Regression (similarity-based)
+  - Use case: Recommend similar products based on user behavior
+
+- Factorization Machines → Sparse data (recommender systems)
+  - Use case: Netflix-style movie recommendations
+
+UNSUPERVISED LEARNING:
+- K-Means → Clustering (group similar data)
+  - Use case: Customer segmentation (group users by behavior)
+
+- PCA → Dimensionality reduction
+  - Use case: Reduce features before training model
+
+- Random Cut Forest → Anomaly detection
+  - Use case: Detect fraud transactions
+
+- Neural Topic Model → Topic modeling (deep learning)
+  - Use case: Discover topics in news articles
+
+- LDA → Topic modeling (probabilistic)
+  - Use case: Group documents by themes (e.g., sports, politics)
+
+DEEP LEARNING / NLP:
+- BlazingText → Text classification + Word2Vec
+  - Use case: Classify customer reviews (positive/negative)
+
+- Sequence-to-Sequence → Translation, summarization
+  - Use case: Translate English to French
+
+- Object2Vec → General embeddings (similarity)
+  - Use case: Find similar products or users
+
+TIME SERIES:
+- DeepAR → Forecasting (time series prediction)
+  - Use case: Predict future sales or stock prices
+
+COMPUTER VISION:
+
+IMAGE CLASSIFICATION:
+- Predict WHAT is in image
+  - Use case: Detect if image contains a cat or dog
+
+OBJECT DETECTION:
+- Predict WHAT + WHERE (bounding boxes)
+  - Use case: Detect cars and pedestrians in a street image
+
+SEMANTIC SEGMENTATION:
+- Predict WHAT + EXACT WHERE (pixel-level mask)
+  - Use case: Self-driving car identifying road, pedestrians, lanes
+
+SPECIALIZED:
+
+ANOMALY DETECTION:
+- Random Cut Forest → Detect outliers
+  - Use case: Detect unusual login activity
+
+SECURITY / BEHAVIOR:
+- IP Insights → Detect suspicious IP activity
+  - Use case: Detect fraudulent login attempts
+
+RECOMMENDER SYSTEMS:
+- Factorization Machines → Sparse user-item prediction
+  - Use case: Recommend products in e-commerce
+
+EMBEDDINGS:
+- Word2Vec (BlazingText) → Word similarity
+  - Use case: Find similar words (king ≈ queen)
+
+- Object2Vec → Object similarity
+  - Use case: Recommend similar items based on embeddings
+
+QUICK IDENTIFICATION RULES:
+
+- Linear relationship → Linear Learner
+- Best tabular performance → XGBoost
+- Sparse user-item data → Factorization Machines
+- Clustering → K-Means
+- Dimensionality reduction → PCA
+- Anomaly detection → Random Cut Forest
+- Time series → DeepAR
+- Text classification → BlazingText
+- Translation → Seq2Seq
+- Similarity embeddings → Object2Vec
+
+COMPUTER VISION SHORTCUT:
+
+- WHAT → Image Classification
+- WHAT + WHERE → Object Detection
+- WHAT + EXACT WHERE → Semantic Segmentation
+
+EXAM TRAPS:
+
+- KNN (supervised) vs K-Means (unsupervised)
+- Random Cut Forest = anomaly detection (not classification)
+- Factorization Machines = sparse data ONLY
+- DeepAR = time series ONLY
+- BlazingText works on sentences (not documents)
+- Seq2Seq requires tokenization + vocabulary
+- Semantic Segmentation = pixel-level (not bounding boxes)
+
+SUMMARY:
+- Match problem → pick algorithm
+- Use case recognition is key for exam success","sagemaker-algo",Medium
