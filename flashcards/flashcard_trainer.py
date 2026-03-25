@@ -77,7 +77,8 @@ REPO_ROOT = DEFAULT_SOURCE.parent
 INCORRECT_RULE_NOTE = "cards whose last result was incorrect"
 WEAK_RULE_NOTE = "cards with accuracy < 80% and at least one incorrect attempt"
 CARD_LABELS = ["WHAT", "WHY", "HOW", "EXAM TRAP", "EXAMPLE"]
-SECTION_PATTERN = re.compile(rf"(?mi)^\s*({'|'.join(CARD_LABELS)})\s*:\s*")
+STRUCTURED_SECTION_PATTERN = re.compile(rf"(?mi)^\s*({'|'.join(CARD_LABELS)})\s*:\s*$")
+GENERIC_SECTION_PATTERN = re.compile(r"(?m)^\s*([A-Z0-9][A-Z0-9 /()+&.,_-]*[A-Z0-9)])\s*:\s*$")
 
 
 @dataclass(frozen=True)
@@ -644,12 +645,18 @@ def wrap_preserving_indent(text: str, width: int) -> str:
 
 
 def parse_structured_answer(answer: str) -> List[tuple[str, str]]:
-    """Split an answer into (SECTION, body) tuples if WHAT/WHY/HOW/EXAMPLE markers exist."""
-    matches = list(SECTION_PATTERN.finditer(answer))
+    """Split an answer into (SECTION, body) tuples if it contains recognizable section headers."""
+    matches = list(STRUCTURED_SECTION_PATTERN.finditer(answer))
+    if not matches:
+        matches = list(GENERIC_SECTION_PATTERN.finditer(answer))
     if not matches:
         return []
 
     sections: List[tuple[str, str]] = []
+    leading_text = answer[: matches[0].start()].strip()
+    if leading_text:
+        sections.append(("", leading_text))
+
     for idx, match in enumerate(matches):
         start = match.end()
         end = matches[idx + 1].start() if idx + 1 < len(matches) else len(answer)
@@ -659,7 +666,7 @@ def parse_structured_answer(answer: str) -> List[tuple[str, str]]:
 
 
 def format_answer(answer: str, width: int, label_color: str | None = None) -> str:
-    """Format an answer so each WHAT/WHY/HOW/EXAMPLE block stands out."""
+    """Format an answer so sectioned cards remain readable in the terminal."""
     sections = parse_structured_answer(answer)
     if not sections:
         return wrap_text(answer, width)
@@ -668,11 +675,12 @@ def format_answer(answer: str, width: int, label_color: str | None = None) -> st
     for idx, (label, body) in enumerate(sections):
         if idx:
             lines.append("")
-        label_line = label
-        if label_color:
-            label_line = colorize(label_line, label_color)
-        lines.append(label_line)
-        lines.append("")
+        if label:
+            label_line = label
+            if label_color:
+                label_line = colorize(label_line, label_color)
+            lines.append(label_line)
+            lines.append("")
         paragraphs = [chunk for chunk in re.split(r"\n\s*\n", body.strip()) if chunk.strip()]
         for p_idx, paragraph in enumerate(paragraphs):
             for line_idx, raw_line in enumerate(paragraph.splitlines()):

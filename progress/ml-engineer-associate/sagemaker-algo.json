@@ -1,0 +1,86 @@
+{
+  "18fe20d439ec4cc8818417403443f544": {
+    "accuracy": 0.0,
+    "last_result": "review",
+    "last_review_flagged_at": "2026-03-25T19:46:31.898871+00:00",
+    "last_reviewed_at": "2026-03-25T19:46:31.901277+00:00",
+    "needs_review": true,
+    "priority_score": 7.0,
+    "times_correct": 0,
+    "times_incorrect": 1,
+    "times_review_again": 1,
+    "times_seen": 1
+  },
+  "6e76953c1f5040ff990345fecae06c0f": {
+    "accuracy": 0.0,
+    "last_result": "review",
+    "last_review_flagged_at": "2026-03-25T19:53:02.034581+00:00",
+    "last_reviewed_at": "2026-03-25T19:53:02.036814+00:00",
+    "needs_review": true,
+    "priority_score": 7.0,
+    "times_correct": 0,
+    "times_incorrect": 1,
+    "times_review_again": 1,
+    "times_seen": 1
+  },
+  "782ee7107d6b425c95253b0a920cebb8": {
+    "accuracy": 0.0,
+    "last_result": "review",
+    "last_review_flagged_at": "2026-03-25T19:53:11.697366+00:00",
+    "last_reviewed_at": "2026-03-25T19:53:11.697550+00:00",
+    "needs_review": true,
+    "priority_score": 7.0,
+    "times_correct": 0,
+    "times_incorrect": 1,
+    "times_review_again": 1,
+    "times_seen": 1
+  },
+  "80d150f268c349f6bea4c76c1ccc107a": {
+    "accuracy": 0.0,
+    "last_result": "review",
+    "last_review_flagged_at": "2026-03-25T19:05:54.035700+00:00",
+    "last_reviewed_at": "2026-03-25T19:05:54.037211+00:00",
+    "needs_review": true,
+    "priority_score": 7.0,
+    "times_correct": 0,
+    "times_incorrect": 1,
+    "times_review_again": 1,
+    "times_seen": 1
+  },
+  "bad263dca1744b778fa2fa7aced51a15": {
+    "accuracy": 0.0,
+    "last_result": "review",
+    "last_review_flagged_at": "2026-03-25T19:53:06.782540+00:00",
+    "last_reviewed_at": "2026-03-25T19:53:06.782710+00:00",
+    "needs_review": true,
+    "priority_score": 9.0,
+    "times_correct": 0,
+    "times_incorrect": 2,
+    "times_review_again": 2,
+    "times_seen": 2
+  },
+  "c5cd347a03434962aa13bb29ecfe681a": {
+    "accuracy": 0.0,
+    "last_result": "review",
+    "last_review_flagged_at": "2026-03-25T19:53:09.147815+00:00",
+    "last_reviewed_at": "2026-03-25T19:53:09.148147+00:00",
+    "needs_review": true,
+    "priority_score": 7.0,
+    "times_correct": 0,
+    "times_incorrect": 1,
+    "times_review_again": 1,
+    "times_seen": 1
+  },
+  "db27d03bb7da4403b199cfaa3a461c20": {
+    "accuracy": 0.0,
+    "last_result": "review",
+    "last_review_flagged_at": "2026-03-25T19:57:00.877599+00:00",
+    "last_reviewed_at": "2026-03-25T19:57:00.880127+00:00",
+    "needs_review": true,
+    "priority_score": 5.0,
+    "times_correct": 0,
+    "times_incorrect": 0,
+    "times_review_again": 1,
+    "times_seen": 1
+  }
+}
