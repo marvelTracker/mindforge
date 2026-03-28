@@ -1,0 +1,311 @@
+id,question,answer,topic,difficulty
+2ca627c11fef4d558e205bb84daf99ff,"What problem did Transformers solve compared to RNNs, and how does self-attention enable modern large language models?","CORE PROBLEM WITH RNNs:
+
+- Sequential processing (token-by-token)
+- Cannot parallelize efficiently
+- Information bottleneck:
+  → entire sentence compressed into ONE hidden state
+
+RESULT:
+- Long-range context gets lost
+- Slow training
+- Limited scalability
+
+---
+
+ENCODER-DECODER (RNN LIMITATION):
+
+- Encoder → converts sentence into single vector (hidden state)
+- Decoder → generates output from that vector
+
+ISSUE:
+→ Loss of information for long sequences
+
+---
+
+BREAKTHROUGH (2017):
+
+Paper: ""Attention Is All You Need""
+
+KEY IDEA:
+→ Remove RNNs entirely
+→ Use attention instead
+
+---
+
+SELF-ATTENTION (CORE CONCEPT):
+
+Each token:
+- Looks at ALL other tokens
+- Assigns importance (attention weights)
+
+QUESTION IT ANSWERS:
+→ “Which words matter when understanding this word?”
+
+---
+
+EXAMPLE:
+
+Sentence:
+""The cat sat on the mat""
+
+For ""sat"":
+- High attention → ""cat""
+- Low attention → ""the""
+
+---
+
+KEY BENEFITS:
+
+1. NO INFORMATION BOTTLENECK
+- Each token keeps its own representation
+
+2. CONTEXT-AWARE MEANING
+- Word meaning depends on surrounding words
+
+3. PARALLEL PROCESSING
+- All tokens processed at same time
+
+---
+
+WHY THIS MATTERS:
+
+Transformers:
+- Train on massive datasets
+- Scale to billions/trillions of parameters
+
+ENABLED:
+- GPT models
+- ChatGPT
+- Modern LLMs
+
+---
+
+POSITIONAL ENCODING (IMPORTANT):
+
+Since no sequence order (no RNN):
+→ Need to encode position manually
+
+Adds:
+- Order information to tokens
+
+---
+
+ATTENTION WEIGHTS:
+
+- Represent relationships between words
+- Higher weight = stronger influence
+
+---
+
+TRANSFORMER CORE SHIFT:
+
+FROM:
+- Sequential memory (RNN)
+
+TO:
+- Global relationships (Attention)
+
+---
+
+EXAM TRAPS:
+
+- Thinking transformers use RNNs → ❌
+- Missing parallelization advantage
+- Not understanding bottleneck problem
+- Ignoring positional encoding
+
+---
+
+SUMMARY:
+
+Transformers replace RNNs with:
+- Self-attention
+- Parallel processing
+
+KEY IDEA:
+→ “Understand words by their relationships, not sequence alone”","genai-foundation",Medium
+9a3d4f9e925d4102b065463a7adb309e,"How does self-attention work in Transformers (including Q, K, V, masking, and multi-head attention)?","CORE IDEA:
+
+Self-attention = each token learns its meaning by looking at ALL other tokens
+
+---
+
+STEP 1: INPUT (EMBEDDINGS)
+
+- Each token → embedding vector
+- Similar words → closer in vector space
+
+---
+
+STEP 2: CREATE Q, K, V
+
+For each token:
+
+- Q (Query) → what am I looking for?
+- K (Key) → what do I offer?
+- V (Value) → actual information
+
+Computed by:
+Embedding × learned matrices (Q, K, V)
+
+---
+
+STEP 3: ATTENTION SCORES
+
+For a token:
+
+- Compare its Q with all K's
+- Use dot product → similarity score
+
+→ ""How relevant is each other token?""
+
+---
+
+STEP 4: SOFTMAX
+
+- Normalize scores → probabilities
+- All weights sum to 1
+
+---
+
+STEP 5: WEIGHTED SUM
+
+- Multiply each V by attention score
+- Sum them → new vector (Z)
+
+RESULT:
+→ Context-aware embedding
+
+---
+
+KEY RESULT:
+
+Original word → context meaning
+
+Example:
+""novel""
+
+- With ""read"" → book
+- With ""idea"" → original
+
+---
+
+MASKED SELF-ATTENTION (GPT):
+
+- Prevents looking into future tokens
+
+Rule:
+Token can only see:
+- Itself
+- Previous tokens
+
+WHY:
+→ Enables next-word prediction
+
+---
+
+TRANSFORMER TYPES:
+
+- GPT → decoder-only (masked attention)
+- BERT → encoder-only (full attention, no masking)
+
+---
+
+MULTI-HEAD ATTENTION:
+
+Instead of 1 attention:
+
+- Split into multiple ""heads""
+- Each head learns different relationships
+
+Example:
+- One head → grammar
+- Another → meaning
+- Another → syntax
+
+BENEFIT:
+→ richer understanding
+
+---
+
+IMPORTANT FORMULA FLOW:
+
+Embedding → Q/K/V  
+Q × K → score  
+Softmax → weights  
+Weights × V → output (Z)
+
+---
+
+EXAM TRAPS:
+
+- Confusing Q/K/V roles
+- Forgetting softmax normalization
+- Missing masking purpose (future leakage)
+- Thinking attention is sequential → ❌ (it's parallel)
+- Not knowing GPT vs BERT difference
+
+---
+
+SUMMARY:
+
+Self-attention:
+- Computes relationships between ALL tokens
+- Produces context-aware embeddings
+
+KEY IDEA:
+→ “Meaning = relationships between words”","genai-foundation",Medium
+59f3e214c1cf4a01b21224ea76cc67da,"How do Transformers resolve multiple meanings of the same word (contextual understanding)?","CORE PROBLEM:
+- Same word can have multiple meanings (polysemy)
+
+EXAMPLES:
+- ""I read a novel"" → novel = book
+- ""This is a novel idea"" → novel = new/original
+
+STARTING POINT:
+- Each token begins with a static base embedding
+- By itself, this does not fully capture context
+
+HOW TRANSFORMERS SOLVE THIS:
+- Self-attention updates the token using surrounding words
+
+SELF-ATTENTION PROCESS:
+1. Compute:
+   - Query (Q)
+   - Key (K)
+   - Value (V)
+
+2. Compare:
+   - Q of current token with K of all other tokens
+   - Produces attention scores
+
+3. Normalize:
+   - Apply softmax to convert scores into weights
+
+4. Recompute meaning:
+   - Output vector = weighted sum of V vectors
+
+RESULT:
+- Same word gets different contextual vectors depending on surrounding words
+
+EXAMPLE OF CONTEXT:
+- Attention to ""read"" → novel means book
+- Attention to ""idea"" → novel means new/original
+
+WHY THIS MATTERS:
+- Meaning is context-dependent
+- Ambiguity is resolved dynamically
+- Enables deep language understanding
+
+KEY IDEA:
+- Meaning is not stored
+- Meaning is computed dynamically
+
+EXAM TRAPS:
+- Thinking the original embedding already contains full meaning
+- Thinking Transformers store fixed meanings for words
+- Forgetting that attention uses all tokens, not just nearby words
+
+SUMMARY:
+- Transformers resolve ambiguity by using self-attention to turn one base word embedding into a context-aware meaning vector","genai-foundation",Medium

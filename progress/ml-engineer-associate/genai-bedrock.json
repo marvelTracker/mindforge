@@ -1,0 +1,14 @@
+{
+  "6a31ccc98613484ca33c53e8bd3cf856": {
+    "accuracy": 1.0,
+    "last_result": "correct",
+    "last_review_flagged_at": null,
+    "last_reviewed_at": "2026-03-28T13:07:06.881807+00:00",
+    "needs_review": false,
+    "priority_score": 0.0,
+    "times_correct": 1,
+    "times_incorrect": 0,
+    "times_review_again": 0,
+    "times_seen": 1
+  }
+}

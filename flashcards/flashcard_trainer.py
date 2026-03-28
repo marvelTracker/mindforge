@@ -426,8 +426,7 @@ class ProgressTracker:
 
         times_seen = max(_extract_int("times_seen"), 0)
         times_correct = max(min(_extract_int("times_correct"), times_seen), 0)
-        inferred_incorrect = max(times_seen - times_correct, 0)
-        times_incorrect = inferred_incorrect
+        times_incorrect = max(_extract_int("times_incorrect"), 0)
         times_review_again = _extract_int("times_review_again")
 
         if cleaned.get("times_seen") != times_seen or cleaned.get("times_correct") != times_correct:
@@ -492,6 +491,11 @@ class ProgressTracker:
         record["last_result"] = result
         record["accuracy"] = compute_accuracy(int(record["times_correct"]), int(record["times_seen"]))
         record["priority_score"] = compute_priority_score(record)
+        record["last_reviewed_at"] = datetime.now(timezone.utc).isoformat()
+
+    def record_preview(self, card_id: str) -> None:
+        record = self.records.setdefault(card_id, blank_progress_record())
+        record["times_seen"] += 1
         record["last_reviewed_at"] = datetime.now(timezone.utc).isoformat()
 
     def save(self) -> None:
@@ -845,7 +849,118 @@ def demo_color_mode() -> None:
     print("\n".join(samples))
 
 
-def run_session(cards: List[Flashcard], trackers: Dict[str, ProgressTracker], selection_label: str) -> None:
+def summarize_question(question: str, width: int = 90) -> str:
+    single_line = " ".join(question.split())
+    if len(single_line) <= width:
+        return single_line
+    return single_line[: max(width - 3, 0)].rstrip() + "..."
+
+
+def search_cards(cards: List[Flashcard], query: str, limit: int = 8) -> List[Flashcard]:
+    normalized_query = query.strip().lower()
+    if not normalized_query:
+        return []
+
+    scored_matches: List[tuple[int, int, Flashcard]] = []
+    for idx, card in enumerate(cards):
+        question = card.question.lower()
+        topic = card.topic.lower()
+        answer = card.answer.lower()
+        score = 0
+        if normalized_query in question:
+            score += 3
+        if normalized_query in topic:
+            score += 2
+        if normalized_query in answer:
+            score += 1
+        if score:
+            scored_matches.append((score, idx, card))
+
+    scored_matches.sort(key=lambda item: (-item[0], item[1]))
+    return [card for _, _, card in scored_matches[:limit]]
+
+
+def preview_card(card: Flashcard, tracker: ProgressTracker | None, body_width: int, term_width: int) -> None:
+    if tracker:
+        tracker.record_preview(card.card_id)
+        tracker.save()
+
+    print()
+    print(colorize(build_border_line("╔", "═", "╗", term_width), Palette.border))
+    title = " Preview Mode "
+    inner_width = max(term_width - 4, 0)
+    print(colorize(f"║ {title.center(inner_width)} ║", Palette.border))
+    print(colorize(build_border_line("╟", "─", "╢", term_width), Palette.border))
+    topic_label = colorize("Topic:", Palette.header)
+    topic_value = colorize(card.topic, Palette.topic)
+    difficulty_color = Palette.difficulty.get(card.difficulty.lower(), "")
+    difficulty_label = colorize("Difficulty:", Palette.header)
+    difficulty_value = colorize(card.difficulty, difficulty_color)
+    print(f"{topic_label} {topic_value}  |  {difficulty_label} {difficulty_value}")
+    print(colorize("─" * term_width, Palette.border))
+    print(colorize("QUESTION", Palette.header))
+    print(wrap_text(card.question, body_width) + "\n")
+
+    while True:
+        response = safe_input(colorize("Press Enter to reveal the answer, or [b] back: ", Palette.prompt)).strip().lower()
+        if response in {"", "b", "back"}:
+            if response in {"b", "back"}:
+                print(colorize("Returned to your current card.", Palette.prompt))
+                print(colorize(build_border_line("╚", "═", "╝", term_width), Palette.border))
+                return
+            break
+        print("Press Enter to reveal the answer or b to go back.")
+
+    print(colorize("\nANSWER", Palette.header))
+    print(format_answer(card.answer, body_width, Palette.section) + "\n")
+    safe_input(colorize("Press Enter or [b] to return to your current card: ", Palette.prompt))
+
+    print(colorize("Returned to your current card.", Palette.prompt))
+    print(colorize(build_border_line("╚", "═", "╝", term_width), Palette.border))
+
+
+def handle_search_preview(
+    all_cards: List[Flashcard],
+    trackers: Dict[str, ProgressTracker],
+    body_width: int,
+    term_width: int,
+) -> None:
+    search_term = safe_input(colorize("Enter search term: ", Palette.prompt)).strip()
+    if not search_term:
+        print(colorize("Search cancelled. Returning to the current card.", Palette.prompt))
+        return
+
+    matches = search_cards(all_cards, search_term)
+    if not matches:
+        print(colorize("No matching cards found. Returning to the current card.", Palette.prompt))
+        return
+
+    print(colorize("\nSearch results:", Palette.header))
+    for idx, card in enumerate(matches, start=1):
+        print(f"{idx}. [{card.topic}] {summarize_question(card.question, body_width)}")
+
+    selection = safe_input(colorize("Choose a result number to preview, or press Enter to cancel: ", Palette.prompt)).strip()
+    if not selection:
+        print(colorize("Search cancelled. Returning to the current card.", Palette.prompt))
+        return
+    if not selection.isdigit():
+        print(colorize("Invalid selection. Returning to the current card.", Palette.negative))
+        return
+
+    chosen_index = int(selection)
+    if not 1 <= chosen_index <= len(matches):
+        print(colorize("Selection out of range. Returning to the current card.", Palette.negative))
+        return
+
+    preview_card(matches[chosen_index - 1], trackers.get(matches[chosen_index - 1].topic), body_width, term_width)
+
+
+def run_session(
+    cards: List[Flashcard],
+    all_cards: List[Flashcard],
+    trackers: Dict[str, ProgressTracker],
+    selection_label: str,
+) -> None:
     if not cards:
         print("No flashcards matched the selected filters. Add cards or adjust your topic list.")
         return
@@ -887,7 +1002,10 @@ def run_session(cards: List[Flashcard], trackers: Dict[str, ProgressTracker], se
 
             while True:
                 response = safe_input(
-                    colorize("How did you do? [c] correct  [i] incorrect  [r] review again  [q] quit: ", Palette.prompt)
+                    colorize(
+                        "How did you do? [c] correct  [i] incorrect  [r] review again  [s] search  [q] quit: ",
+                        Palette.prompt,
+                    )
                 ).strip().lower()
                 if response in {"c", "correct"}:
                     correct += 1
@@ -910,9 +1028,12 @@ def run_session(cards: List[Flashcard], trackers: Dict[str, ProgressTracker], se
                         tracker.update(card.card_id, "review")
                     print(colorize("🔁 Flagged for review again. Keep it on the radar.", Palette.prompt))
                     break
+                if response in {"s", "search"}:
+                    handle_search_preview(all_cards, trackers, body_width, term_width)
+                    continue
                 if response in {"q", "quit"}:
                     raise SessionAbort
-                print("Please respond with c, i, r, or q so the score stays accurate.")
+                print("Please respond with c, i, r, s, or q so the score stays accurate.")
 
             asked_so_far = correct + len(misses) + review_again
             accuracy_so_far = (correct / asked_so_far * 100) if asked_so_far else 0.0
@@ -944,7 +1065,10 @@ def run_session(cards: List[Flashcard], trackers: Dict[str, ProgressTracker], se
 
     remaining_review = 0
     remaining_incorrect = 0
-    for tracker in trackers.values():
+    relevant_topics = {card.topic for card in cards}
+    for topic, tracker in trackers.items():
+        if topic not in relevant_topics:
+            continue
         for record in tracker.records.values():
             if record.get("needs_review"):
                 remaining_review += 1
@@ -977,6 +1101,7 @@ def main() -> None:
                 f"to activate the {certification.label} track."
             )
         return
+    all_cards = list(cards)
     announce_color_mode()
     print(f"{len(cards)} cards loaded for {certification.label}, {auto_assigned} auto-assigned difficulty values.")
 
@@ -991,7 +1116,7 @@ def main() -> None:
     print(f"\nLoaded {len(cards)} cards for {selection_label}.\n")
 
     topic_cards: Dict[str, List[Flashcard]] = {}
-    for card in cards:
+    for card in all_cards:
         topic_cards.setdefault(card.topic, []).append(card)
     progress_trackers = {
         topic: ProgressTracker(topic, topic_cards[topic], certification.progress_dir) for topic in topic_cards
@@ -1057,7 +1182,7 @@ def main() -> None:
         random.shuffle(cards)
     if args.limit is not None:
         cards = cards[: max(args.limit, 0)]
-    run_session(cards, progress_trackers, selection_label)
+    run_session(cards, all_cards, progress_trackers, selection_label)
     for tracker in progress_trackers.values():
         tracker.save()
 

@@ -5,9 +5,9 @@
     "last_review_flagged_at": "2026-03-22T10:51:49.897071+00:00",
     "last_reviewed_at": "2026-03-22T10:51:49.899251+00:00",
     "needs_review": true,
-    "priority_score": 5.0,
+    "priority_score": 7.0,
     "times_correct": 0,
-    "times_incorrect": 0,
+    "times_incorrect": 1,
     "times_review_again": 1,
     "times_seen": 1
   },
