@@ -1,0 +1,1007 @@
+id,question,answer,topic,difficulty
+3c38f9507f82484cb3664de299f0fd81,"What are CloudWatch Metrics, and what key concepts should you understand for monitoring in AWS?","CORE IDEA:
+- Metrics = measurable values of AWS resources
+
+KEY IDEA:
+👉 “Metrics = what you monitor in AWS”
+
+---
+
+WHAT IS A METRIC?
+
+- Time-based data point
+- Example:
+  → EC2 CPUUtilization
+  → NetworkIn
+  → S3 bucket size
+
+---
+
+NAMESPACES:
+
+- Metrics grouped by service
+- Example:
+  → AWS/EC2
+  → AWS/S3
+
+---
+
+KEY IDEA:
+👉 “Namespace = service grouping”
+
+---
+
+DIMENSIONS:
+
+- Attributes of a metric
+- Example:
+  → InstanceId
+  → Environment
+
+- Up to 30 dimensions per metric
+
+---
+
+KEY IDEA:
+👉 “Dimensions = how you filter metrics”
+
+---
+
+TIME & GRANULARITY:
+
+- Metrics have timestamps
+- Default:
+  → 5-minute intervals
+
+- Detailed monitoring:
+  → 1-minute intervals
+
+---
+
+CUSTOM METRICS:
+
+- Create your own metrics
+- Example:
+  → Memory usage (not default in EC2)
+
+---
+
+KEY IDEA:
+👉 “Custom metrics = extend monitoring”
+
+---
+
+DASHBOARDS:
+
+- Visualize multiple metrics
+- Central monitoring view
+
+---
+
+METRIC STREAMING:
+
+- Near real-time export
+- Uses:
+  → Kinesis Data Firehose
+
+Destinations:
+- S3 (Athena analysis)
+- Redshift (data warehouse)
+- OpenSearch (dashboards)
+- Third-party tools (Datadog, Splunk)
+
+---
+
+KEY IDEA:
+👉 “Metrics can flow outside AWS for analytics”
+
+---
+
+EXAM TRAPS:
+
+- Metrics are static → ❌ (time-based)
+- Dimensions = metrics → ❌
+- All metrics are 1-minute by default → ❌
+
+---
+
+MENTAL MODEL:
+
+Metrics = sensors  
+Dimensions = labels  
+Dashboards = control panel  
+Streaming = data pipeline  
+
+---
+
+SUMMARY:
+
+- Metrics = monitor system behavior
+- Namespaces = service grouping
+- Dimensions = filtering
+- Custom metrics = extended monitoring
+- Streaming = real-time analytics
+
+KEY IDEA:
+👉 “CloudWatch Metrics = visibility into your system”","management-governance",Medium
+ec274e31b07940e4b827d0cc4b0d871a,"What are CloudWatch Logs, and how do log groups, streams, Insights, and subscriptions work?","CORE IDEA:
+- Logs = detailed records of system activity
+
+KEY IDEA:
+👉 “Metrics = numbers, Logs = detailed events”
+
+---
+
+STRUCTURE:
+
+1. Log Group
+   - Logical container
+   - Usually per application
+
+2. Log Stream
+   - Sequence of log events
+   - Example:
+     → EC2 instance
+     → container
+     → Lambda function
+
+---
+
+KEY IDEA:
+👉 “Group = app, Stream = instance”
+
+---
+
+RETENTION:
+
+- Configurable:
+  → 1 day → 10 years → forever
+
+---
+
+LOG SOURCES:
+
+- EC2 (via agent)
+- Lambda
+- ECS
+- API Gateway
+- VPC Flow Logs
+- CloudTrail
+- Route53
+
+---
+
+KEY IDEA:
+👉 “Everything can send logs to CloudWatch”
+
+---
+
+LOGS INSIGHTS:
+
+- Query engine for logs
+
+FEATURES:
+- Search & filter logs
+- Aggregate data
+- Visualize results
+- Query multiple log groups
+
+LIMITATION:
+- NOT real-time
+- Queries historical data only
+
+---
+
+KEY IDEA:
+👉 “Insights = SQL-like search for logs”
+
+---
+
+EXPORT OPTIONS:
+
+1. Batch Export:
+   - To S3
+   - Slow (up to hours)
+
+2. Real-time Streaming:
+   - Using subscription filters
+
+Destinations:
+- Kinesis Data Streams
+- Kinesis Firehose
+- Lambda
+- OpenSearch
+
+---
+
+KEY IDEA:
+👉 “Subscriptions = real-time pipeline for logs”
+
+---
+
+SECURITY:
+
+- Encrypted by default
+- Optional KMS encryption
+
+---
+
+ADVANCED:
+
+- Cross-account log aggregation
+- Filter logs before sending
+
+---
+
+EXAM TRAPS:
+
+- Logs Insights is real-time → ❌
+- Logs stored without structure → ❌
+- Subscription = batch export → ❌
+
+---
+
+MENTAL MODEL:
+
+Logs = raw events  
+Insights = search engine  
+Subscriptions = streaming pipeline  
+
+---
+
+SUMMARY:
+
+- Logs = detailed system events
+- Log groups & streams = structure
+- Insights = querying
+- Subscriptions = real-time streaming
+
+KEY IDEA:
+👉 “CloudWatch Logs = visibility + analysis + streaming”","management-governance",Medium
+d402d8e07bba4d16b79313d302f5cb84,"What are CloudWatch Agents, and what is the difference between CloudWatch Logs Agent and Unified Agent?","CORE IDEA:
+- EC2 does NOT send logs/advanced metrics by default
+
+KEY IDEA:
+👉 “No agent = no logs”
+
+---
+
+WHY AGENTS:
+
+- Installed on:
+  → EC2 instances
+  → On-prem servers
+
+- Purpose:
+  → Send logs → CloudWatch Logs
+  → Send metrics → CloudWatch Metrics
+
+- Requires:
+  → IAM Role with permissions
+
+---
+
+KEY IDEA:
+👉 “Agent pushes data to CloudWatch”
+
+---
+
+TYPES OF AGENTS:
+
+1. CloudWatch Logs Agent (OLD)
+   - Sends logs ONLY
+   - No metrics
+
+2. CloudWatch Unified Agent (NEW)
+   - Sends logs + metrics
+   - Supports centralized config (SSM Parameter Store)
+
+---
+
+KEY IDEA:
+👉 “Unified Agent = logs + metrics (modern standard)”
+
+---
+
+UNIFIED AGENT – EXTRA METRICS:
+
+- CPU (granular breakdown)
+- RAM (used, free, cached)
+- Disk (usage + I/O)
+- Network (connections, packets)
+- Processes (running, sleeping, etc.)
+- Swap memory
+
+---
+
+KEY IDEA:
+👉 “Default EC2 = basic metrics, Agent = deep metrics”
+
+---
+
+CONFIGURATION:
+
+- Unified Agent can be configured via:
+  → SSM Parameter Store (centralized)
+
+---
+
+KEY IDEA:
+👉 “SSM = central control for agents”
+
+---
+
+EXAM TRAPS:
+
+- EC2 sends logs automatically → ❌
+- Logs Agent supports metrics → ❌
+- Unified Agent only for logs → ❌
+
+---
+
+MENTAL MODEL:
+
+No agent → nothing collected  
+Logs Agent → logs only  
+Unified Agent → full observability  
+
+---
+
+SUMMARY:
+
+- Install agent to send logs/metrics
+- Unified Agent is preferred
+- Enables deep system monitoring
+
+KEY IDEA:
+👉 “CloudWatch Agent = bridge between servers and CloudWatch”","management-governance",Medium
+ef8e0ab39d9849c3818078f4a5ae676e,"How do CloudWatch Alarms work, and what are Composite Alarms used for?","CORE IDEA:
+- CloudWatch Alarms monitor metrics and trigger actions when thresholds are breached
+
+---
+
+ALARM STATES:
+
+- OK → normal
+- INSUFFICIENT_DATA → not enough data
+- ALARM → threshold breached
+
+---
+
+KEY IDEA:
+👉 “ALARM = condition met → action triggered”
+
+---
+
+CONFIGURATION:
+
+- Period → evaluation time window
+- Supports high-resolution metrics (10s, 30s, 60s)
+
+---
+
+ALARM TARGETS (ACTIONS):
+
+1. EC2 actions
+   → stop / terminate / reboot / recover
+
+2. Auto Scaling
+   → scale out / scale in
+
+3. SNS notifications
+   → can trigger Lambda or workflows
+
+---
+
+KEY IDEA:
+👉 “Alarm → SNS → Lambda = automation pattern”
+
+---
+
+COMPOSITE ALARMS:
+
+- Combine multiple alarms using:
+  → AND / OR logic
+
+- Monitor alarm states (not raw metrics)
+
+---
+
+USE CASE:
+
+- Reduce noise
+- Create smarter alerts
+
+Example:
+- CPU high + Network low → trigger
+- CPU high + Network high → ignore
+
+---
+
+KEY IDEA:
+👉 “Composite = smarter, less noisy alerts”
+
+---
+
+EC2 RECOVERY:
+
+- Alarm can trigger instance recovery
+- Based on:
+  → instance status check
+  → system status check
+  → EBS health
+
+- Recovery keeps:
+  → same IPs
+  → same metadata
+  → same placement group
+
+---
+
+KEY IDEA:
+👉 “Recovery = same instance, new host”
+
+---
+
+EXTRA FEATURES:
+
+- Alarms can use:
+  → CloudWatch Logs metric filters
+
+- Testing:
+  → set-alarm-state (simulate alarm)
+
+---
+
+EXAM TRAPS:
+
+- Alarm monitors multiple metrics → ❌ (single metric only)
+- Composite alarms monitor metrics → ❌ (monitor alarms)
+- No action on alarm → ❌ (actions are key feature)
+
+---
+
+MENTAL MODEL:
+
+Metric → Alarm → Action  
+Multiple alarms → Composite → Smarter action  
+
+---
+
+SUMMARY:
+
+- Alarms trigger actions based on metrics
+- Composite alarms reduce noise
+- Can automate EC2 recovery, scaling, and workflows
+
+KEY IDEA:
+👉 “CloudWatch Alarms = monitoring → decision → action”","management-governance",Medium
+fb1557aa99db44048d43525a8a3c690d,"What is AWS X-Ray, and how does it help debug distributed applications?","CORE IDEA:
+- AWS X-Ray provides distributed tracing for applications
+
+---
+
+PROBLEM IT SOLVES:
+
+- Hard to debug microservices
+- Logs are scattered (CloudWatch, multiple services)
+- No single view of request flow
+
+---
+
+KEY IDEA:
+👉 “X-Ray = visual map of a request across services”
+
+---
+
+WHAT X-RAY DOES:
+
+- Tracks a request end-to-end
+- Shows service dependencies
+- Identifies:
+  → errors
+  → latency issues
+  → bottlenecks
+
+---
+
+KEY IDEA:
+👉 “See exactly where things break”
+
+---
+
+CORE COMPONENTS:
+
+- Trace → full request journey
+- Segment → each service
+- Subsegment → internal operations
+
+---
+
+KEY IDEA:
+👉 “Trace = segments across services”
+
+---
+
+FEATURES:
+
+- Visual service map
+- Performance analysis
+- Error tracking
+- SLA/latency insights
+- User impact visibility
+
+---
+
+SUPPORTED SERVICES:
+
+- Lambda
+- EC2
+- API Gateway
+- ECS / Beanstalk
+- Load Balancers
+- DynamoDB, SNS, etc.
+
+---
+
+HOW IT WORKS:
+
+1. Add X-Ray SDK to code
+2. Install/run X-Ray daemon (for EC2/on-prem)
+3. App sends traces → daemon
+4. Daemon sends data → X-Ray
+
+---
+
+KEY IDEA:
+👉 “SDK captures → daemon sends → X-Ray visualizes”
+
+---
+
+IMPORTANT DETAILS:
+
+- Lambda → daemon managed by AWS
+- EC2 → you MUST install daemon
+- Requires IAM permissions to write to X-Ray
+- Supports sampling (not all requests traced)
+
+---
+
+EXAM TRAPS:
+
+- X-Ray works without daemon on EC2 → ❌
+- No code change required → ❌ (SDK needed)
+- Only for logs → ❌ (it’s tracing, not logging)
+
+---
+
+MENTAL MODEL:
+
+Request → services → traces → X-Ray map  
+
+---
+
+SUMMARY:
+
+- X-Ray = distributed tracing tool
+- Helps debug microservices visually
+- Requires SDK + daemon + IAM
+
+KEY IDEA:
+👉 “X-Ray = debugging superpower for distributed systems”","management-governance",Medium
+c2995924055f4366bba1d85803d41a7c,"What is Amazon QuickSight, and what are its key features and use cases?","CORE IDEA:
+- Amazon QuickSight is a serverless BI (business intelligence) tool for data visualization and analytics
+
+---
+
+WHAT IT DOES:
+
+- Create dashboards, charts, reports
+- Perform ad-hoc analysis
+- Explore data interactively
+
+---
+
+KEY IDEA:
+👉 “QuickSight = dashboards + insights for business users”
+
+---
+
+DATA SOURCES:
+
+- AWS:
+  → S3, Athena, Redshift, RDS, Aurora
+
+- External:
+  → Excel, CSV, SaaS apps (e.g. Salesforce)
+  → JDBC / ODBC databases
+
+---
+
+KEY IDEA:
+👉 “Connect to ANY data → visualize instantly”
+
+---
+
+ENGINE:
+
+- SPICE (in-memory engine)
+  → fast queries
+  → scalable
+  → up to 10GB per user
+
+---
+
+KEY IDEA:
+👉 “SPICE = speed at scale”
+
+---
+
+USE CASES:
+
+- KPI dashboards
+- Business reporting
+- Log analysis (S3 + Athena)
+- Ad-hoc data exploration
+
+---
+
+ML FEATURES (LIMITED):
+
+- Anomaly detection (Random Cut Forest)
+- Forecasting (with trends & seasonality)
+- Auto narratives (text explanations)
+
+---
+
+KEY IDEA:
+👉 “QuickSight = BI + light ML (not full ML platform)”
+
+---
+
+QUICKSIGHT Q:
+
+- Natural language queries
+  → “Top sales in Florida?”
+
+- Requires:
+  → clean field names
+  → setup topics
+
+---
+
+KEY IDEA:
+👉 “Q = ask questions, no SQL”
+
+---
+
+SECURITY:
+
+- IAM / SSO / MFA
+- Row-level security (RLS)
+- Column-level security (Enterprise)
+- VPC / PrivateLink support
+
+---
+
+EXAM TRAPS:
+
+- Used for ETL → ❌ (use Glue)
+- Full ML platform → ❌ (limited ML only)
+- Only AWS data → ❌ (supports external sources)
+
+---
+
+MENTAL MODEL:
+
+Data → SPICE → Dashboard → Insights  
+
+---
+
+SUMMARY:
+
+- Serverless BI tool for visualization
+- Built for business users (not devs)
+- Supports many data sources + ML insights
+
+KEY IDEA:
+👉 “QuickSight = easy, fast, serverless BI on AWS”","management-governance",Medium
+641bb83b32f7459da30f9e34c60c6ef7,"Which QuickSight visualization should you use for different data analysis scenarios?","CORE IDEA:
+- Choose visualization based on the type of insight you need
+
+---
+
+VISUALIZATION GUIDE:
+
+1. Comparison / Distribution  
+→ Bar Chart / Histogram  
+
+👉 “Compare categories → Bar chart”
+
+---
+
+2. Trends Over Time  
+→ Line Chart / Area Chart  
+
+👉 “Time-based data → Line chart”
+
+---
+
+3. Correlation Between Variables  
+→ Scatter Plot  
+
+👉 “Relationship between X & Y → Scatter”
+
+---
+
+4. 2D Data with Intensity  
+→ Heat Map  
+
+👉 “Matrix + intensity → Heat map”
+
+---
+
+5. Aggregation (Part-to-Whole)  
+→ Pie Chart / Donut Chart  
+
+👉 “Percentage of total → Pie/Donut”
+
+---
+
+6. Hierarchical Aggregation  
+→ Tree Map  
+
+👉 “Hierarchy + proportions → Tree map”
+
+---
+
+7. Multi-Dimensional Analysis  
+→ Pivot Table  
+
+👉 “Table + aggregation → Pivot table”
+
+---
+
+8. KPI / Target Tracking  
+→ KPI Visual  
+
+👉 “Metric vs target → KPI”
+
+---
+
+9. Geographic Data  
+→ Geospatial Chart (Map)  
+
+👉 “Location-based → Map”
+
+---
+
+10. Text Frequency  
+→ Word Cloud  
+
+👉 “Text analysis → Word cloud”
+
+---
+
+AUTO GRAPH:
+
+- Automatically selects best visualization
+- Based on data structure
+
+---
+
+KEY IDEA:
+👉 “AutoGraph = default, but validate manually”
+
+---
+
+DASHBOARDS:
+
+- Read-only snapshots
+- Shared with users
+- No editing by viewers
+
+---
+
+KEY IDEA:
+👉 “Dashboard = final output, not editable”
+
+---
+
+EXAM TRAPS:
+
+- Trend → Bar chart → ❌ (use Line)
+- Correlation → Pie chart → ❌ (use Scatter)
+- Hierarchy → Pie → ❌ (use Tree map)
+
+---
+
+MENTAL MODEL:
+
+What question are you answering?
+
+Compare → Bar  
+Trend → Line  
+Relation → Scatter  
+Location → Map  
+Hierarchy → Tree  
+
+---
+
+SUMMARY:
+
+- Visualization depends on data type + question
+- Know mapping of use case → chart type
+
+KEY IDEA:
+👉 “Right chart = right insight”","management-governance",Medium
+8a1f2ed5ffa042419d78c8a551dec5b1,"What is the difference between CloudWatch, CloudTrail, and AWS Config?","CORE IDEA:
+- These 3 services answer different questions:
+
+👉 CloudWatch → “How is my system performing?”
+👉 CloudTrail → “Who did what?”
+👉 Config → “What changed and is it compliant?”
+
+---
+
+CLOUDWATCH:
+
+- Metrics (CPU, Network, Errors)
+- Dashboards
+- Logs & alarms
+
+---
+
+KEY IDEA:
+👉 “CloudWatch = performance + monitoring”
+
+---
+
+CLOUDTRAIL:
+
+- Records API calls (Console, SDK, CLI)
+- Tracks:
+  → who did it
+  → when
+  → what action
+
+- Global service
+
+---
+
+KEY IDEA:
+👉 “CloudTrail = audit trail of actions”
+
+---
+
+AWS CONFIG:
+
+- Tracks configuration changes over time
+- Evaluates compliance using rules
+- Provides timeline of resource state
+
+---
+
+KEY IDEA:
+👉 “Config = configuration + compliance”
+
+---
+
+EXAMPLE (LOAD BALANCER):
+
+CloudWatch:
+→ traffic, errors, performance
+
+CloudTrail:
+→ who changed SSL cert or security group
+
+Config:
+→ track config changes + enforce rules
+   (e.g. must have SSL)
+
+---
+
+KEY IDEA:
+👉 “Same resource, 3 different lenses”
+
+---
+
+EXAM TRAPS:
+
+- CloudTrail = monitoring → ❌
+- CloudWatch = auditing → ❌
+- Config = prevention → ❌
+
+---
+
+MENTAL MODEL:
+
+Performance issue? → CloudWatch  
+Security/audit issue? → CloudTrail  
+Compliance/config issue? → Config  
+
+---
+
+SUMMARY:
+
+- CloudWatch → metrics & monitoring  
+- CloudTrail → API audit logs  
+- Config → config tracking & compliance  
+
+KEY IDEA:
+👉 “Watch, Trail, Config = Monitor, Audit, Validate”","management-governance",Medium
+f74ecd7c0ebf48ce9d894b7a61b53d29,"What is AWS Trusted Advisor and what does it check?","CORE IDEA:
+👉 Trusted Advisor = automated best-practice recommendations for your AWS account
+
+---
+
+WHAT IT DOES:
+
+- Analyzes your AWS account
+- Provides recommendations to improve:
+  → cost
+  → security
+  → performance
+  → reliability
+
+---
+
+CHECK CATEGORIES (6):
+
+1. Cost Optimization  
+2. Performance  
+3. Security  
+4. Fault Tolerance  
+5. Service Limits  
+6. Operational Excellence  
+
+---
+
+EXAMPLES OF CHECKS:
+
+- Public S3 buckets  
+- Open security groups (0.0.0.0/0)  
+- Use of root account  
+- Unused resources (cost waste)  
+- Service limits nearing threshold  
+
+---
+
+CORE vs FULL CHECKS:
+
+- Core checks → available to all users (mainly security + limits)
+- Full checks → require Business/Enterprise support plan
+
+---
+
+ADVANCED FEATURES:
+
+- Programmatic access via AWS Support API (paid plans)
+- Real-time recommendations dashboard
+
+---
+
+EXAM TRAPS:
+
+- Prevents issues automatically → ❌ (only advises)
+- Replaces Config → ❌ (Config = compliance tracking)
+- Replaces CloudWatch → ❌ (monitoring)
+
+---
+
+MENTAL MODEL:
+
+“What should I fix or improve in my AWS account?”
+👉 Trusted Advisor
+
+---
+
+SUMMARY:
+
+- No setup required  
+- Provides recommendations  
+- Focus on best practices  
+- Limited features without paid support  
+
+KEY IDEA:
+👉 “Trusted Advisor = AWS account health check”","management-governance",Medium
