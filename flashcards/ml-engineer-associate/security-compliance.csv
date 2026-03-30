@@ -1,0 +1,1802 @@
+id,question,answer,topic,difficulty
+1f62d5bb9b4e48b09a69652f42e726f6,"What are the key security best practices and mechanisms for securing SageMaker workloads?","CORE IDEA:
+- Security = IAM + Encryption + Monitoring
+
+KEY IDEA:
+👉 “Control access, encrypt data, audit everything”
+
+---
+
+IDENTITY & ACCESS (IAM):
+
+- Use IAM roles for:
+  - SageMaker jobs
+  - notebooks
+  - endpoints
+
+- Apply:
+  → least privilege principle
+
+---
+
+KEY IDEA:
+👉 “Only give access to what is strictly needed”
+
+---
+
+USER SECURITY:
+
+- Enable MFA (especially root/admin)
+- Avoid using root account
+
+---
+
+ENCRYPTION AT REST:
+
+- Use AWS KMS keys
+
+Applies to:
+- training jobs
+- tuning jobs
+- batch transform
+- endpoints
+- notebooks
+- /opt/ml and temp data
+
+---
+
+S3 DATA SECURITY:
+
+- Encrypt training data + model artifacts
+- Use:
+  - SSE-S3
+  - SSE-KMS
+
+---
+
+ENCRYPTION IN TRANSIT:
+
+- Use:
+  → TLS / SSL (default supported)
+
+---
+
+INTER-NODE ENCRYPTION:
+
+- Encrypt communication between training instances
+
+Also called:
+→ inter-container traffic encryption
+
+Trade-off:
+- ↑ security
+- ↓ training speed
+
+---
+
+KEY IDEA:
+👉 “Secure distributed training at a performance cost”
+
+---
+
+MONITORING & AUDITING:
+
+CloudTrail:
+- logs API calls
+- tracks user activity
+
+CloudWatch:
+- monitors metrics
+- triggers alarms
+
+---
+
+KEY DIFFERENCE:
+
+CloudTrail:
+→ “who did what”
+
+CloudWatch:
+→ “what is happening now”
+
+---
+
+NETWORK SECURITY:
+
+- Use SSL when connecting to services (e.g., EMR)
+- Use VPC + security groups when needed
+
+---
+
+PII PROTECTION:
+
+- Encrypt sensitive data:
+  - names
+  - emails
+  - SSNs
+  - credit cards
+
+---
+
+KEY IDEA:
+👉 “Always encrypt PII (at rest + in transit)”
+
+---
+
+EXAM TRAPS:
+
+- CloudTrail = monitoring → ❌ (it’s auditing)
+- CloudWatch = auditing → ❌ (it’s monitoring)
+- IAM optional → ❌ (core security layer)
+- Encryption only for S3 → ❌ (also SageMaker resources)
+
+---
+
+MENTAL MODEL:
+
+Security layers:
+
+1. IAM → access control
+2. Encryption → data protection
+3. CloudTrail → audit
+4. CloudWatch → monitoring
+
+---
+
+SUMMARY:
+
+SageMaker security:
+- IAM for access
+- KMS for encryption
+- TLS for transport
+- CloudTrail + CloudWatch for visibility
+
+KEY IDEA:
+👉 “Secure ML = identity + encryption + observability”","security-compliance",Medium
+6a01175da9574c6b891e933cad9b1700,"How does SageMaker interact with VPCs, and what are the key security considerations for network isolation?","CORE IDEA:
+- SageMaker can run inside a VPC
+- But still requires access to S3
+
+KEY IDEA:
+👉 “Secure network ≠ isolated from required services”
+
+---
+
+SAGEMAKER IN VPC:
+
+- Training jobs can run inside:
+  → private VPC
+
+- Improves:
+  → network isolation
+  → security
+
+---
+
+CRITICAL DEPENDENCY:
+
+👉 SageMaker MUST access S3
+
+Used for:
+- training data
+- model artifacts
+
+---
+
+SOLUTION:
+
+- Use:
+  → S3 VPC endpoints
+
+---
+
+KEY IDEA:
+👉 “Private VPC + S3 endpoint = secure + functional”
+
+---
+
+NOTEBOOK SECURITY:
+
+Default:
+- internet access = ENABLED
+
+Risk:
+- unrestricted outbound access
+
+---
+
+SECURE OPTION:
+
+- Disable internet access
+
+BUT:
+→ must configure outbound access
+
+---
+
+OPTIONS:
+
+1. VPC Interface Endpoint (PrivateLink)
+2. NAT Gateway
+
+---
+
+KEY IDEA:
+👉 “Disable internet → add controlled access path”
+
+---
+
+TRAINING / INFERENCE CONTAINERS:
+
+Default:
+- internet enabled
+
+Option:
+- enable network isolation
+
+---
+
+TRADE-OFF:
+
+Network isolation:
+- ↑ security
+- ↓ connectivity (no S3 by default)
+
+---
+
+KEY IDEA:
+👉 “Isolation breaks dependencies unless explicitly restored”
+
+---
+
+IAM PERMISSIONS (FINE CONTROL):
+
+Control actions like:
+- CreateTrainingJob
+- CreateModel
+- CreateEndpoint
+- CreateNotebook
+- CreateHyperParameterTuningJob
+
+---
+
+USE CASE:
+
+- restrict expensive operations
+- enforce role-based access
+
+---
+
+PREDEFINED POLICIES:
+
+- SageMakerFullAccess
+- SageMakerReadOnly
+- Data Scientist role
+
+---
+
+MONITORING:
+
+CloudWatch:
+- endpoint latency
+- invocations
+- CPU / memory
+- Ground Truth workforce metrics
+
+---
+
+AUDITING:
+
+CloudTrail:
+- logs user + API activity
+- stored in S3
+
+---
+
+EXAM TRAPS:
+
+- Private VPC = no S3 needed → ❌
+- Network isolation keeps S3 access → ❌
+- Disabling internet breaks SageMaker → ❌ (if endpoints configured)
+- CloudWatch = auditing → ❌
+
+---
+
+MENTAL MODEL:
+
+SageMaker network flow:
+
+VPC (private)
+→ needs controlled path
+→ to S3 (via endpoint)
+
+---
+
+SUMMARY:
+
+To secure SageMaker in VPC:
+- use private subnets
+- add S3 VPC endpoints
+- control outbound access (PrivateLink/NAT)
+- apply IAM least privilege
+
+KEY IDEA:
+👉 “Lock it down—but keep required paths open”","security-compliance",Medium
+528abd1d747b4685939c3fe16195724d,"What is AWS IAM and why is it a foundational service for security?","CORE IDEA:
+- IAM = Identity and Access Management
+- Controls who can access what
+
+KEY IDEA:
+👉 “IAM = who you are + what you can do”
+
+---
+
+WHAT IS IAM?
+
+- Global AWS service
+- Manages:
+  - users
+  - groups
+  - permissions
+
+---
+
+PURPOSE:
+
+- Authenticate users
+- Authorize actions
+
+---
+
+KEY COMPONENTS:
+
+1. Users
+2. Groups
+3. Policies
+
+---
+
+WHY IT MATTERS:
+
+- Prevents unauthorized access
+- Controls cost + security risks
+
+---
+
+EXAM TRAPS:
+
+- IAM is regional → ❌ (global service)
+- IAM only for authentication → ❌ (also authorization)
+
+---
+
+SUMMARY:
+
+IAM:
+- defines identities
+- controls permissions
+
+KEY IDEA:
+👉 “Security starts with IAM”","security-compliance",Medium
+11703c77ed0944b7800592147b1a733e,"How do IAM users and groups work in AWS?","CORE IDEA:
+- Users = individuals
+- Groups = collections of users
+
+KEY IDEA:
+👉 “Group permissions scale better than user permissions”
+
+---
+
+IAM USERS:
+
+- Represent:
+  → one person or entity
+
+---
+
+IAM GROUPS:
+
+- Collection of users
+- Used to:
+  → assign permissions at scale
+
+---
+
+RULES:
+
+- Groups contain:
+  → users only (NOT other groups)
+
+- Users:
+  → can belong to multiple groups
+  → may belong to no group (not best practice)
+
+---
+
+EXAMPLE:
+
+Developers group:
+→ Alice, Bob, Charles
+
+Ops group:
+→ David, Edward
+
+---
+
+KEY IDEA:
+👉 “Assign permissions to groups, not individuals”
+
+---
+
+EXAM TRAPS:
+
+- Groups can contain groups → ❌
+- Users must belong to a group → ❌
+
+---
+
+SUMMARY:
+
+Users:
+→ identities
+
+Groups:
+→ permission management
+
+KEY IDEA:
+👉 “Manage access through groups”","security-compliance",Medium
+ac05b43e897240d0869f8fccd5f2dfcd,"What are IAM policies and how do they control permissions?","CORE IDEA:
+- Policies = permission documents
+
+KEY IDEA:
+👉 “Policies define what actions are allowed or denied”
+
+---
+
+WHAT IS A POLICY?
+
+- JSON document
+- Defines:
+  - actions
+  - resources
+  - permissions
+
+---
+
+ATTACHED TO:
+
+- users
+- groups
+- roles
+
+---
+
+EXAMPLE ACTIONS:
+
+- ec2:DescribeInstances
+- s3:GetObject
+
+---
+
+FUNCTION:
+
+- Allow or deny access to AWS services
+
+---
+
+KEY IDEA:
+👉 “No policy = no access”
+
+---
+
+EXAM TRAPS:
+
+- Policies are code → ❌ (declarative JSON)
+- Policies optional → ❌ (required for access)
+
+---
+
+SUMMARY:
+
+Policies:
+- define permissions
+- control service access
+
+KEY IDEA:
+👉 “Policies = rules of access”","security-compliance",Medium
+3fb390fab648474fa958eb2c0b085c44,"What is the principle of least privilege in AWS IAM?","CORE IDEA:
+- Give minimum required permissions
+
+KEY IDEA:
+👉 “Only allow what is necessary”
+
+---
+
+DEFINITION:
+
+- Users get:
+  → only permissions needed to perform tasks
+
+---
+
+WHY IMPORTANT:
+
+- Reduces:
+  - security risk
+  - accidental misuse
+  - cost exposure
+
+---
+
+EXAMPLE:
+
+User needs:
+→ S3 read access
+
+DO NOT GIVE:
+→ full admin access
+
+---
+
+KEY IDEA:
+👉 “More permissions = more risk”
+
+---
+
+EXAM TRAPS:
+
+- Easier to give full access → ❌ (bad practice)
+- Least privilege optional → ❌ (core principle)
+
+---
+
+MENTAL MODEL:
+
+Permissions:
+→ start with NONE
+→ add only what is needed
+
+---
+
+SUMMARY:
+
+Least privilege:
+- minimize access
+- maximize security
+
+KEY IDEA:
+👉 “Start small, expand only if needed”","security-compliance",Medium
+c616063cbb8a4578b2d38c59823471ad,"What is AWS KMS and how does it manage encryption, key types, and access control?","CORE IDEA:
+- KMS = managed encryption key service
+
+KEY IDEA:
+👉 “KMS manages keys, not your data”
+
+---
+
+WHAT IS KMS?
+
+- AWS Key Management Service
+- Used for:
+  → encryption at rest
+
+---
+
+INTEGRATION:
+
+Works with:
+- S3
+- EBS
+- RDS
+- DynamoDB
+- SSM
+- SageMaker
+
+---
+
+KEY IDEA:
+👉 “Most AWS encryption = KMS under the hood”
+
+---
+
+IAM INTEGRATION:
+
+- Controls access to keys
+- Uses IAM + key policies
+
+---
+
+AUDITING:
+
+- All key usage logged in:
+  → CloudTrail
+
+---
+
+KEY IDEA:
+👉 “Every key usage is traceable”
+
+---
+
+KEY TYPES:
+
+1. Symmetric keys (most common)
+- One key
+- encrypt + decrypt
+- used by AWS services
+- key never exposed
+
+---
+
+2. Asymmetric keys
+
+- Public key:
+  → encrypt
+
+- Private key:
+  → decrypt (never exposed)
+
+---
+
+USE CASE:
+
+- Encrypt outside AWS using public key
+- Decrypt inside AWS
+
+---
+
+KEY OWNERSHIP TYPES:
+
+1. AWS owned keys
+- fully managed
+- invisible to user
+- free
+
+---
+
+2. AWS managed keys
+- format: aws/service
+- limited control
+- free
+
+---
+
+3. Customer managed keys (CMK)
+- full control
+- cost: ~$1/month
+
+---
+
+KEY IDEA:
+👉 “More control = customer managed keys”
+
+---
+
+KEY ROTATION:
+
+- AWS managed:
+  → automatic (1 year)
+
+- Customer managed:
+  → configurable rotation
+  → manual rotation supported
+
+---
+
+REGIONAL SCOPE:
+
+- Keys are:
+  → region-specific
+
+---
+
+IMPLICATION:
+
+- Cross-region:
+  → must re-encrypt with new key
+
+---
+
+KEY POLICIES:
+
+- Control access to keys
+- REQUIRED for usage
+
+---
+
+KEY IDEA:
+👉 “No key policy = no access”
+
+---
+
+CROSS-ACCOUNT ACCESS:
+
+- Enabled via:
+  → key policies
+
+---
+
+USE CASE:
+
+- share encrypted snapshots across accounts
+
+---
+
+SECURE SECRETS PATTERN:
+
+- Encrypt secrets with KMS
+- Store:
+  → code
+  → environment variables
+
+---
+
+NOT:
+- plain text secrets ❌
+
+---
+
+EXAM TRAPS:
+
+- KMS keys are global → ❌ (regional)
+- Keys can be downloaded → ❌ (except public key)
+- IAM alone controls access → ❌ (needs key policy)
+- Same key used across regions → ❌
+
+---
+
+MENTAL MODEL:
+
+KMS:
+→ “Secure vault for keys”
+
+You:
+→ “call API to use keys”
+
+---
+
+SUMMARY:
+
+KMS:
+- manages encryption keys
+- integrates with AWS services
+- enforces access via IAM + key policies
+- logs usage via CloudTrail
+
+KEY IDEA:
+👉 “Centralized, auditable encryption control”","security-compliance",Medium
+54c73d249cf24459a09bc0865332fae7,"What is Amazon Macie and how does it help protect sensitive data in AWS?","CORE IDEA:
+- Macie = data discovery + classification service
+
+KEY IDEA:
+👉 “Macie finds sensitive data in S3”
+
+---
+
+WHAT IS MACIE?
+
+- Fully managed service
+- Uses:
+  - machine learning
+  - pattern matching
+
+---
+
+PURPOSE:
+
+- Discover:
+  → sensitive data (PII)
+
+- Protect:
+  → data privacy
+
+---
+
+SUPPORTED DATA SOURCE:
+
+- Amazon S3 (primary focus)
+
+---
+
+KEY IDEA:
+👉 “Macie scans S3 buckets for sensitive content”
+
+---
+
+WHAT IT DETECTS:
+
+- PII (Personally Identifiable Information):
+  - names
+  - emails
+  - addresses
+  - IDs
+
+---
+
+HOW IT WORKS:
+
+1. Scan S3 buckets
+2. Classify data
+3. Identify sensitive content
+4. Generate findings
+
+---
+
+NOTIFICATIONS:
+
+- Sent via:
+  → EventBridge
+
+---
+
+INTEGRATIONS:
+
+- SNS → alerts
+- Lambda → automation
+- EventBridge → workflows
+
+---
+
+KEY IDEA:
+👉 “Detect → alert → automate response”
+
+---
+
+SETUP:
+
+- Simple enablement
+- Select S3 buckets to scan
+
+---
+
+NO CODE REQUIRED
+
+---
+
+EXAM TRAPS:
+
+- Macie protects EC2 → ❌ (S3-focused)
+- Macie encrypts data → ❌ (detection only)
+- Macie replaces KMS → ❌
+- Macie blocks access → ❌ (detects, doesn’t enforce)
+
+---
+
+MENTAL MODEL:
+
+S3 bucket:
+→ “What data do I have?”
+
+Macie:
+→ “Is any of it sensitive?”
+
+---
+
+SUMMARY:
+
+Macie:
+- discovers sensitive data in S3
+- identifies PII
+- sends alerts via EventBridge
+
+KEY IDEA:
+👉 “Visibility into data risk”","security-compliance",Medium
+9297951305494fb49569ec8dceef81ee,"What is AWS Secrets Manager and what are its key features and use cases?","CORE IDEA:
+- Secrets Manager = secure storage + automatic rotation of secrets
+
+KEY IDEA:
+👉 “Store, rotate, and manage secrets securely”
+
+---
+
+WHAT IS SECRETS MANAGER?
+
+- Managed service for storing:
+  - database credentials
+  - API keys
+  - tokens
+
+---
+
+KEY FEATURES:
+
+1. Automatic rotation
+- rotate secrets every X days
+- uses Lambda for rotation
+
+2. Secret generation
+- can auto-generate strong credentials
+
+3. Encryption
+- uses AWS KMS
+
+---
+
+INTEGRATION:
+
+- Native integration with:
+  - RDS
+  - Aurora
+  - other AWS services
+
+---
+
+KEY IDEA:
+👉 “No hardcoded credentials in code”
+
+---
+
+MULTI-REGION SUPPORT:
+
+- replicate secrets across regions
+- enables:
+  - disaster recovery
+  - multi-region apps
+
+---
+
+EXAM TRAPS:
+
+- Same as Parameter Store → ❌ (no auto rotation there)
+- Stores secrets in plaintext → ❌
+- No AWS integration → ❌
+
+---
+
+SUMMARY:
+
+Secrets Manager:
+- securely stores secrets
+- automates rotation
+- integrates with AWS services
+
+KEY IDEA:
+👉 “Secure + automated secret lifecycle”","security-compliance",Medium
+fdafe2e4baa74a15bca9278f2c43dbf9,"What is AWS WAF, where can it be deployed, and what types of threats does it protect against?","CORE IDEA:
+- WAF = Layer 7 (HTTP) protection
+
+KEY IDEA:
+👉 “WAF protects web apps from HTTP-based attacks”
+
+---
+
+WHAT IS AWS WAF?
+
+- Web Application Firewall
+- Protects against:
+  - SQL injection
+  - Cross-site scripting (XSS)
+  - HTTP exploits
+
+---
+
+LAYER:
+
+- Operates at:
+  → Layer 7 (HTTP)
+
+NOT:
+- Layer 4 (TCP/UDP)
+
+---
+
+SUPPORTED TARGETS:
+
+- Application Load Balancer (ALB)
+- API Gateway
+- CloudFront
+- AppSync
+- Cognito User Pools
+
+---
+
+NOT SUPPORTED:
+
+- Network Load Balancer (NLB) ❌
+
+---
+
+KEY IDEA:
+👉 “WAF only works with Layer 7 services”
+
+---
+
+WEB ACL (ACCESS CONTROL LIST):
+
+- Defines rules for filtering requests
+
+---
+
+RULE TYPES:
+
+- IP filtering (IP sets)
+- HTTP headers / body
+- URI filtering
+- Size constraints
+- Geo matching (countries)
+- Rate limiting (DDoS protection)
+
+---
+
+KEY IDEA:
+👉 “Rules decide what traffic is allowed or blocked”
+
+---
+
+RULE GROUP:
+
+- Collection of reusable rules
+
+---
+
+SCOPE:
+
+- Regional (ALB, API Gateway, etc.)
+- Global (CloudFront)
+
+---
+
+ADVANCED USE CASE:
+
+Problem:
+- Need WAF + fixed IP
+
+Solution:
+- Use Global Accelerator + ALB + WAF
+
+---
+
+KEY IDEA:
+👉 “Global Accelerator gives static IP, WAF protects ALB”
+
+---
+
+EXAM TRAPS:
+
+- WAF works with NLB → ❌
+- WAF protects TCP/UDP → ❌
+- WAF is global everywhere → ❌ (only CloudFront is global)
+
+---
+
+MENTAL MODEL:
+
+Incoming HTTP request:
+→ WAF filters
+→ allowed traffic reaches app
+
+---
+
+SUMMARY:
+
+AWS WAF:
+- protects web apps at Layer 7
+- uses rules (Web ACLs)
+- integrates with ALB, API Gateway, CloudFront
+
+KEY IDEA:
+👉 “First line of defense for web traffic”","security-compliance",Medium
+c95950f39ed84ce8a67f6916f229ecd7,"What is AWS Shield, and what is the difference between Shield Standard and Shield Advanced?","CORE IDEA:
+- Shield = DDoS protection service
+
+KEY IDEA:
+👉 “Shield protects infrastructure from being overwhelmed by traffic”
+
+---
+
+WHAT IS DDoS?
+
+- Distributed Denial of Service
+- Massive traffic from many sources
+- Goal:
+  → overload system
+  → block real users
+
+---
+
+AWS SHIELD STANDARD:
+
+- Free (enabled by default)
+- Protects against:
+  - Layer 3 (Network)
+  - Layer 4 (Transport)
+
+Examples:
+- SYN floods
+- UDP floods
+- Reflection attacks
+
+---
+
+KEY IDEA:
+👉 “Basic protection is automatic and free”
+
+---
+
+AWS SHIELD ADVANCED:
+
+- Paid (~$3000/month)
+- Advanced protection for:
+  - EC2
+  - ELB
+  - CloudFront
+  - Global Accelerator
+  - Route 53
+
+---
+
+FEATURES:
+
+- Protection against sophisticated attacks
+- 24/7 AWS DDoS Response Team (DRT)
+- Cost protection (refunds during attacks)
+- Enhanced monitoring & visibility
+
+---
+
+AUTOMATION:
+
+- Integrates with WAF
+- Automatically:
+  - creates
+  - evaluates
+  - deploys rules
+
+---
+
+KEY IDEA:
+👉 “Shield Advanced + WAF = full Layer 7 protection”
+
+---
+
+LAYER COVERAGE:
+
+- Shield Standard → L3/L4
+- Shield Advanced → L3/L4 + L7 (via WAF)
+
+---
+
+EXAM TRAPS:
+
+- Shield protects only Layer 7 → ❌
+- Shield replaces WAF → ❌
+- Shield Standard costs money → ❌
+
+---
+
+MENTAL MODEL:
+
+Traffic flood →
+→ Shield absorbs/filters
+→ WAF handles application attacks
+→ system stays available
+
+---
+
+SUMMARY:
+
+AWS Shield:
+- protects against DDoS attacks
+
+Standard:
+- free, L3/L4 protection
+
+Advanced:
+- paid, full protection + WAF + support
+
+KEY IDEA:
+👉 “Shield = network defense, WAF = application defense”","security-compliance",Medium
+2077142c7a504846b499d414501172e8,"What is a VPC, and how do public/private subnets, Internet Gateway, and NAT Gateway work together?","CORE IDEA:
+- VPC = isolated network in AWS
+
+KEY IDEA:
+👉 “VPC = your private data center inside AWS”
+
+---
+
+VPC BASICS:
+
+- Virtual Private Cloud (VPC)
+- Regional resource
+- Has CIDR IP range (network space)
+
+---
+
+SUBNETS:
+
+- Subnet = partition of VPC
+- Defined per Availability Zone (AZ)
+
+Two types:
+
+1. PUBLIC SUBNET
+   - Accessible from internet
+   - Can send & receive traffic
+
+2. PRIVATE SUBNET
+   - NOT accessible from internet
+   - More secure
+
+---
+
+KEY IDEA:
+👉 “Public = exposed, Private = protected”
+
+---
+
+ROUTE TABLE:
+
+- Controls traffic flow
+- Defines:
+  → where traffic goes
+  → how subnets communicate
+
+---
+
+INTERNET GATEWAY (IGW):
+
+- Enables internet access
+- Attached to VPC
+
+Public subnet rule:
+- Route → IGW
+
+Result:
+→ EC2 can access internet
+→ Internet can access EC2
+
+---
+
+KEY IDEA:
+👉 “IGW makes a subnet public”
+
+---
+
+NAT GATEWAY:
+
+- Allows PRIVATE subnet → internet access
+- Blocks inbound internet traffic
+
+How it works:
+1. NAT is placed in PUBLIC subnet
+2. Private subnet routes → NAT
+3. NAT routes → IGW
+
+Result:
+→ Private EC2 can access internet
+→ Internet CANNOT access private EC2
+
+---
+
+KEY IDEA:
+👉 “NAT = outbound only internet access”
+
+---
+
+DEFAULT VPC:
+
+- One per region
+- Only PUBLIC subnets by default
+
+---
+
+EXAM TRAPS:
+
+- Private subnet has direct IGW access → ❌
+- NAT allows inbound traffic → ❌
+- Subnets are regional → ❌ (they are AZ-level)
+
+---
+
+MENTAL MODEL:
+
+VPC = house  
+Subnets = rooms  
+IGW = front door  
+NAT = one-way exit door  
+
+---
+
+SUMMARY:
+
+- VPC = isolated network
+- Public subnet = IGW access
+- Private subnet = no direct internet
+- NAT = private → internet (one-way)
+
+KEY IDEA:
+👉 “IGW = public access, NAT = private outbound access”","security-compliance",Medium
+f22ec541c8134390a94c2e91fe0996de,"What is the difference between Network ACLs and Security Groups, and what are VPC Flow Logs used for?","CORE IDEA:
+- Two layers of network security in VPC
+
+KEY IDEA:
+👉 “NACL = subnet firewall, SG = instance firewall”
+
+---
+
+NETWORK ACL (NACL):
+
+- Applied at SUBNET level
+- Controls traffic IN and OUT
+
+RULES:
+- Allow ✅
+- Deny ❌
+
+CHARACTERISTICS:
+- Stateless
+  → must allow inbound AND outbound
+
+- Uses:
+  → IP addresses only
+
+---
+
+KEY IDEA:
+👉 “NACL = coarse-grained control (subnet level)”
+
+---
+
+SECURITY GROUP (SG):
+
+- Applied to:
+  → EC2 / ENI
+
+RULES:
+- Allow only ✅ (no deny)
+
+CHARACTERISTICS:
+- Stateful
+  → return traffic automatically allowed
+
+- Can reference:
+  → IPs
+  → other security groups
+
+---
+
+KEY IDEA:
+👉 “SG = fine-grained control (instance level)”
+
+---
+
+TRAFFIC FLOW:
+
+Internet
+→ NACL (subnet level)
+→ Security Group (instance level)
+→ EC2
+
+---
+
+KEY IDEA:
+👉 “Traffic hits NACL first, then SG”
+
+---
+
+DEFAULT BEHAVIOR:
+
+- Default NACL:
+  → allows ALL traffic
+
+- Default SG:
+  → denies ALL inbound
+  → allows ALL outbound
+
+---
+
+VPC FLOW LOGS:
+
+- Capture network traffic metadata
+
+SCOPE:
+- VPC
+- Subnet
+- ENI
+
+---
+
+WHAT THEY TRACK:
+
+- Allowed / denied traffic
+- Source & destination IP
+- Ports & protocols
+
+---
+
+USE CASES:
+
+- Troubleshooting connectivity
+- Security monitoring
+- Audit network activity
+
+---
+
+DESTINATIONS:
+
+- S3
+- CloudWatch Logs
+- Kinesis Firehose
+
+---
+
+KEY IDEA:
+👉 “Flow Logs = visibility into network traffic”
+
+---
+
+EXAM TRAPS:
+
+- SG supports deny rules → ❌
+- NACL is stateful → ❌
+- Flow logs capture packet payload → ❌ (metadata only)
+
+---
+
+MENTAL MODEL:
+
+NACL = building gate  
+Security Group = room door  
+Flow Logs = CCTV camera  
+
+---
+
+SUMMARY:
+
+- NACL → subnet firewall (stateless, allow + deny)
+- SG → instance firewall (stateful, allow only)
+- Flow Logs → monitor traffic
+
+KEY IDEA:
+👉 “Layered defense + visibility = secure VPC”","security-compliance",Medium
+670fff852a8646b9a7c4eab91beba4f3,"How do VPC Peering, VPC Endpoints, Site-to-Site VPN, and Direct Connect enable connectivity in AWS?","CORE IDEA:
+- Different ways to connect VPCs, AWS services, and on-prem systems
+
+KEY IDEA:
+👉 “Choose based on: private access, internet usage, and latency”
+
+---
+
+VPC PEERING:
+
+- Connects two VPCs privately
+- Works across:
+  → accounts
+  → regions
+
+REQUIREMENTS:
+- Non-overlapping CIDR ranges
+
+LIMITATION:
+- NOT transitive
+
+Example:
+A ↔ B  
+B ↔ C  
+A ❌ C (no automatic connection)
+
+---
+
+KEY IDEA:
+👉 “Peering = direct VPC-to-VPC link (no hub)”
+
+---
+
+VPC ENDPOINTS:
+
+- Private access to AWS services
+- No internet required
+
+TYPES:
+
+1. Gateway Endpoint
+   - S3
+   - DynamoDB
+
+2. Interface Endpoint
+   - All other services
+   - Uses ENI
+
+---
+
+KEY IDEA:
+👉 “Endpoint = private AWS service access”
+
+---
+
+SITE-TO-SITE VPN:
+
+- Connects:
+  → On-prem → AWS VPC
+
+CHARACTERISTICS:
+- Encrypted
+- Uses public internet
+- Quick setup
+
+---
+
+KEY IDEA:
+👉 “VPN = fast, encrypted over internet”
+
+---
+
+DIRECT CONNECT:
+
+- Private physical connection
+- On-prem → AWS
+
+CHARACTERISTICS:
+- No internet
+- High speed
+- Low latency
+- Takes longer to set up
+
+---
+
+KEY IDEA:
+👉 “Direct Connect = dedicated private line”
+
+---
+
+COMPARISON:
+
+- Peering → VPC ↔ VPC
+- Endpoint → VPC ↔ AWS services (private)
+- VPN → On-prem ↔ VPC (internet)
+- Direct Connect → On-prem ↔ VPC (private line)
+
+---
+
+EXAM TRAPS:
+
+- VPC peering is transitive → ❌
+- Endpoints use internet → ❌
+- Direct Connect is quick to set up → ❌
+
+---
+
+MENTAL MODEL:
+
+Peering = bridge between VPCs  
+Endpoint = private door to AWS  
+VPN = secure tunnel over internet  
+Direct Connect = private highway  
+
+---
+
+SUMMARY:
+
+- Peering → connect VPCs
+- Endpoint → private AWS access
+- VPN → encrypted internet connection
+- Direct Connect → dedicated private connection
+
+KEY IDEA:
+👉 “Pick based on security vs speed vs setup time”","security-compliance",Medium
+6f450ece43bc4ce5abec6f1078831afa,"What are the core VPC concepts you must remember for AWS exams?","CORE IDEA:
+- VPC = networking foundation in AWS
+
+KEY IDEA:
+👉 “Understand roles of each component, not implementation details”
+
+---
+
+VPC:
+
+- Virtual Private Cloud
+- Regional
+- Default VPC exists per region
+
+---
+
+SUBNETS:
+
+- Partition of VPC
+- Defined per AZ
+- Types:
+  → Public
+  → Private
+
+---
+
+INTERNET ACCESS:
+
+- Internet Gateway (IGW)
+  → enables public subnet internet access
+
+- NAT Gateway
+  → enables private subnet outbound internet
+
+---
+
+KEY IDEA:
+👉 “IGW = public access, NAT = private outbound access”
+
+---
+
+SECURITY:
+
+- NACL:
+  → subnet level
+  → stateless
+  → allow + deny
+
+- Security Group:
+  → instance level
+  → stateful
+  → allow only
+
+---
+
+KEY IDEA:
+👉 “NACL = outer firewall, SG = inner firewall”
+
+---
+
+CONNECTIVITY:
+
+- VPC Peering:
+  → connect VPCs
+  → non-overlapping CIDR
+  → NOT transitive
+
+- VPC Endpoint:
+  → private access to AWS services
+
+---
+
+HYBRID CONNECTIVITY:
+
+- Site-to-Site VPN:
+  → encrypted over internet
+
+- Direct Connect:
+  → private physical connection
+
+---
+
+MONITORING:
+
+- VPC Flow Logs:
+  → capture network traffic metadata
+  → used for debugging & auditing
+
+---
+
+EXAM PRIORITY:
+
+Focus on:
+- What each component does
+- When to use each
+
+NOT:
+- Deep configuration details
+
+---
+
+MENTAL MODEL:
+
+VPC = network  
+Subnets = zones  
+IGW/NAT = internet paths  
+SG/NACL = security layers  
+Peering/Endpoints/VPN/DX = connections  
+Flow Logs = visibility  
+
+---
+
+SUMMARY:
+
+- VPC = base network
+- Subnets = structure
+- IGW/NAT = internet control
+- SG/NACL = security
+- Peering/Endpoints/VPN/DX = connectivity
+- Flow Logs = monitoring
+
+KEY IDEA:
+👉 “VPC = building blocks + connectivity + security”","security-compliance",Medium
+1f76fd01702e42d7b0201d850b9a1995,"What is AWS PrivateLink, and when should you use it instead of VPC Peering?","CORE IDEA:
+- PrivateLink = private access to services across VPCs
+
+KEY IDEA:
+👉 “PrivateLink exposes services securely without network merging”
+
+---
+
+WHAT IS PRIVATELINK?
+
+- Provides private connectivity:
+  → VPC → service (another VPC)
+
+- No:
+  → internet
+  → VPC peering
+  → NAT
+  → route table complexity
+
+---
+
+HOW IT WORKS:
+
+SERVICE PROVIDER (e.g., vendor):
+- Runs service in their VPC
+- Exposes via:
+  → Network Load Balancer (NLB)
+
+CONSUMER (you):
+- Creates:
+  → Interface Endpoint (ENI)
+
+Connection:
+→ PrivateLink connects ENI → NLB
+
+---
+
+KEY IDEA:
+👉 “ENI (client) → NLB (service)”
+
+---
+
+USE CASES:
+
+- SaaS / Marketplace services
+- Cross-account service sharing
+- Secure internal microservices
+
+---
+
+WHY NOT VPC PEERING?
+
+VPC Peering:
+- Full network access
+- Not scalable
+- Not secure for SaaS
+
+PrivateLink:
+- Service-level access only
+- Highly scalable
+- More secure
+
+---
+
+KEY IDEA:
+👉 “Peering = network access, PrivateLink = service access”
+
+---
+
+ADVANTAGES:
+
+- Fully private traffic
+- No IP overlap concerns
+- Easy to scale to many customers
+- Fine-grained access
+
+---
+
+EXAM TRAPS:
+
+- PrivateLink uses Internet Gateway → ❌
+- PrivateLink requires peering → ❌
+- PrivateLink exposes entire VPC → ❌
+
+---
+
+MENTAL MODEL:
+
+Peering = connecting two networks  
+PrivateLink = plugging into a service  
+
+---
+
+SUMMARY:
+
+- PrivateLink = private service access across VPCs
+- Uses:
+  → NLB (provider)
+  → ENI (consumer)
+- More secure and scalable than peering
+
+KEY IDEA:
+👉 “PrivateLink = private SaaS connectivity”","security-compliance",Medium
