@@ -4,7 +4,7 @@
 
 ## 🎯 Overall Goals
 
-- [ ] Finish Udemy Course (23.5h)
+- [x] Finish Udemy Course (23.5h)
 - [ ] Complete 700+ SkillCertPro Questions
 - [ ] Build and revise cheat sheet
 - [ ] Complete at least 3 full mock exams
@@ -14,7 +14,7 @@
 
 ## 📊 Progress Tracker
 
-- Course Progress: [ ]
+- Course Progress: [100]
 - Questions Done: [ ]
 - Mock Exams Done: [ ]
 - Weak Areas Identified: [ ]
@@ -26,54 +26,54 @@
 
 ## 📅 Mar 19 (Wed)
 
-- [ ] Complete Section 1 (Intro)
-- [ ] Start Section 2 (Data Ingestion)
+- [x] Complete Section 1 (Intro)
+- [x] Start Section 2 (Data Ingestion)
 - [ ] Do 20–30 questions
 - [ ] Review wrong answers
 
 ## 📅 Mar 20 (Thu)
 
-- [ ] Complete Section 2
-- [ ] Start Section 3 (Data Transformation)
+- [x] Complete Section 2
+- [x] Start Section 3 (Data Transformation)
 - [ ] Focus: Glue, feature engineering
 - [ ] Do 30 questions
 
 ## 📅 Mar 21 (Fri)
 
-- [ ] Complete Section 3
-- [ ] Start Section 4 (AWS AI Services)
-- [ ] Do 30–40 questions
+- [x] Complete Section 3
+- [x] Start Section 4 (AWS AI Services)
+- [x] Do 30–40 questions
 
 ## 📅 Mar 22 (Sat) — Heavy Day
 
-- [ ] Complete Section 4
-- [ ] Complete Section 5 (SageMaker algorithms)
-- [ ] Focus: SageMaker basics
+- [x] Complete Section 4
+- [x] Complete Section 5 (SageMaker algorithms)
+- [x] Focus: SageMaker basics
 - [ ] Do 80–120 questions
 
 ## 📅 Mar 23 (Sun) — Heavy Day
 
-- [ ] Complete Section 6 (Training & tuning)
-- [ ] Focus: HPO, training jobs, spot training
-- [ ] Do 100+ questions
+- [x] Complete Section 6 (Training & tuning)
+- [x] Focus: HPO, training jobs, spot training
+- [x] Do 100+ questions
 
 ## 📅 Mar 24 (Mon)
 
-- [ ] Complete Section 7 (GenAI basics)
-- [ ] Complete Section 8 (Bedrock)
+- [x] Complete Section 7 (GenAI basics)
+- [x] Complete Section 8 (Bedrock)
 - [ ] Do 40 questions
 
 ## 📅 Mar 25 (Tue)
 
-- [ ] Complete Section 9 (MLOps)
-- [ ] Complete Section 10 (Security)
+- [x] Complete Section 9 (MLOps)
+- [x] Complete Section 10 (Security)
 - [ ] Do 50 questions
 
 ---
 
 ## ✅ Week 1 Checkpoint
 
-- [ ] Course completed
+- [x] Course completed
 - [ ] 300+ questions completed
 - [ ] Understand SageMaker basics
 - [ ] Identify weak areas
