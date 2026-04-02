@@ -24,16 +24,16 @@
     "times_seen": 1
   },
   "782ee7107d6b425c95253b0a920cebb8": {
-    "accuracy": 0.0,
-    "last_result": "review",
+    "accuracy": 0.5,
+    "last_result": "correct",
     "last_review_flagged_at": "2026-03-25T19:53:11.697366+00:00",
-    "last_reviewed_at": "2026-03-25T19:53:11.697550+00:00",
-    "needs_review": true,
-    "priority_score": 7.0,
-    "times_correct": 0,
+    "last_reviewed_at": "2026-04-02T19:03:04.539286+00:00",
+    "needs_review": false,
+    "priority_score": 4.5,
+    "times_correct": 1,
     "times_incorrect": 1,
     "times_review_again": 1,
-    "times_seen": 1
+    "times_seen": 2
   },
   "80d150f268c349f6bea4c76c1ccc107a": {
     "accuracy": 0.0,
