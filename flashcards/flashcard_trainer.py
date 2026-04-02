@@ -583,6 +583,7 @@ def display_topics_menu(topic_counts: Counter) -> List[str]:
     print(f"0. All topics ({total_cards} cards)")
     for idx, topic in enumerate(topics, start=1):
         print(f"{idx}. {topic} ({topic_counts[topic]} cards)")
+    print("S. Search mode")
     return topics
 
 
@@ -602,6 +603,65 @@ def prompt_for_topic_choice(topics: List[str]) -> List[str] | None:
                 print(f"Focusing on topic: {chosen}")
                 return [chosen]
         print("Please enter a valid number from the menu so spacing stays simple.")
+
+
+def run_search_mode(cards: List[Flashcard], body_width: int) -> Flashcard | None:
+    while True:
+        search_term = safe_input(
+            colorize("Enter search term (or press Enter to go back): ", Palette.prompt)
+        ).strip()
+        if not search_term:
+            print(colorize("Returning to topic selection.", Palette.prompt))
+            return None
+
+        matches = search_cards(cards, search_term)
+        if not matches:
+            print(colorize("No matching cards found. Try another term or press Enter to go back.", Palette.negative))
+            continue
+
+        print(colorize("\nSearch results:", Palette.header))
+        for idx, card in enumerate(matches, start=1):
+            print(f"{idx}. [{card.topic}] {summarize_question(card.question, body_width)}")
+
+        selection = safe_input(
+            colorize("Choose a result number to study, [s] search again, or press Enter to go back: ", Palette.prompt)
+        ).strip().lower()
+        if not selection:
+            print(colorize("Returning to topic selection.", Palette.prompt))
+            return None
+        if selection in {"s", "search"}:
+            continue
+        if selection.isdigit():
+            chosen_index = int(selection)
+            if 1 <= chosen_index <= len(matches):
+                chosen = matches[chosen_index - 1]
+                print(f"Studying search result: [{chosen.topic}] {chosen.question}")
+                return chosen
+        print(colorize("Please enter a valid result number, s, or press Enter to go back.", Palette.negative))
+
+
+def prompt_for_topic_or_search_choice(topics: List[str], all_cards: List[Flashcard]) -> tuple[List[str] | None, List[Flashcard] | None]:
+    if not topics:
+        return None, None
+
+    body_width = min(get_terminal_width() - 8, 100)
+    while True:
+        selection = safe_input("Choose a number (0 for all topics, s for search mode): ").strip().lower()
+        if selection in {"", "0"}:
+            print("Studying every topic to reinforce broad recall.")
+            return None, None
+        if selection in {"s", "search"}:
+            chosen_card = run_search_mode(all_cards, body_width)
+            if chosen_card is not None:
+                return None, [chosen_card]
+            continue
+        if selection.isdigit():
+            idx = int(selection)
+            if 1 <= idx <= len(topics):
+                chosen = topics[idx - 1]
+                print(f"Focusing on topic: {chosen}")
+                return [chosen], None
+        print("Please enter a valid number or s so spacing stays simple.")
 
 
 def describe_selection(topics: List[str] | None) -> str:
@@ -1105,22 +1165,32 @@ def main() -> None:
     announce_color_mode()
     print(f"{len(cards)} cards loaded for {certification.label}, {auto_assigned} auto-assigned difficulty values.")
 
-    topic_counts = Counter(card.topic for card in cards)
-    topics = display_topics_menu(topic_counts)
-    selected_topics = args.topics
-    if not selected_topics:
-        selected_topics = prompt_for_topic_choice(topics)
-
-    cards = filter_by_topics(cards, selected_topics)
-    selection_label = describe_selection(selected_topics)
-    print(f"\nLoaded {len(cards)} cards for {selection_label}.\n")
-
     topic_cards: Dict[str, List[Flashcard]] = {}
     for card in all_cards:
         topic_cards.setdefault(card.topic, []).append(card)
     progress_trackers = {
         topic: ProgressTracker(topic, topic_cards[topic], certification.progress_dir) for topic in topic_cards
     }
+
+    topic_counts = Counter(card.topic for card in cards)
+    topics = display_topics_menu(topic_counts)
+    selected_topics = args.topics
+    search_selected_cards: List[Flashcard] | None = None
+    if not selected_topics:
+        selected_topics, search_selected_cards = prompt_for_topic_or_search_choice(topics, all_cards)
+
+    if search_selected_cards is not None:
+        cards = search_selected_cards
+        selection_label = "search result"
+        print(f"\nLoaded {len(cards)} card for {selection_label}.\n")
+        run_session(cards, all_cards, progress_trackers, selection_label)
+        for tracker in progress_trackers.values():
+            tracker.save()
+        return
+
+    cards = filter_by_topics(cards, selected_topics)
+    selection_label = describe_selection(selected_topics)
+    print(f"\nLoaded {len(cards)} cards for {selection_label}.\n")
 
     study_mode = prompt_for_study_mode()
     skip_shuffle = False
