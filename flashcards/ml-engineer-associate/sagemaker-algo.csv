@@ -1662,3 +1662,247 @@ EXAM TRAP:
 SUMMARY:
 - Match problem → pick algorithm
 - Use case recognition is key for exam success","sagemaker-algo",Medium
+48686b3f7a5b4d9faa08901a62ee7c69,"How do you choose between major SageMaker tools and deployment options in exam scenarios?","CORE IDEA:
+- SageMaker services map to specific phases of the ML lifecycle
+
+KEY IDEA:
+👉 “Match the service to the job: build, prepare, train, track, deploy, monitor”
+
+---
+
+ML DEVELOPMENT / WORKSPACE
+
+- SageMaker Studio
+  - Unified web IDE for ML
+  - Use for end-to-end ML development
+  - Exam clue:
+    → “Fully managed ML environment”
+
+- SageMaker Notebook Instances
+  - Managed Jupyter notebooks
+  - Use for quick experiments / smaller legacy workflows
+  - Exam trap:
+    → Studio is generally the modern preferred answer
+
+- SageMaker Canvas
+  - No-code ML tool
+  - Use for business users / analysts
+  - Exam clue:
+    → “No coding required”
+
+---
+
+DATA PREP / FEATURES / LABELING
+
+- SageMaker Processing
+  - Managed preprocessing jobs
+  - Use for data cleaning and feature engineering before training
+  - Exam clue:
+    → “Runs before training”
+
+- SageMaker Data Wrangler
+  - Visual data prep + EDA
+  - Use for transformations without heavy coding
+  - Exam clue:
+    → Integrated with Studio
+
+- SageMaker Feature Store
+  - Central feature repository
+  - Use to reuse features across models and support training + inference consistency
+  - Exam clue:
+    → “online + offline store”
+
+- SageMaker Ground Truth
+  - Data labeling service
+  - Use when large datasets need human + automated labeling
+  - Exam clue:
+    → “human + automated labeling”
+
+---
+
+MODEL BUILDING / TRAINING / TUNING
+
+- SageMaker Autopilot
+  - Automatically builds, trains, and tunes models
+  - Use for quick baseline models or limited ML expertise
+  - Exam clue:
+    → “Automatically builds, trains, tunes”
+
+- SageMaker Training Jobs
+  - Managed model training infrastructure
+  - Use for custom training at scale
+  - Exam clue:
+    → “distributed training”, “managed infra”
+
+- Hyperparameter Tuning / Automatic Model Tuning
+  - Optimizes model hyperparameters
+  - Use to improve model performance
+  - Exam clue:
+    → Bayesian optimization
+
+- Distributed Training
+  - Parallel training across multiple instances
+  - Use for deep learning / very large datasets
+  - Exam clue:
+    → “multiple instances”, “large-scale training”
+
+- Spot Training
+  - Lower-cost training using spot capacity
+  - Use for cost optimization when interruptions are acceptable
+  - Exam trap:
+    → Can be interrupted
+
+- SageMaker RL
+  - Reinforcement learning workflows
+  - Use for robotics, control systems, game AI
+  - Exam clue:
+    → rare but specific
+
+---
+
+BIAS / DEBUGGING / TRACKING / GOVERNANCE
+
+- SageMaker Clarify
+  - Bias detection + explainability
+  - Use for fairness and model transparency
+  - Exam clue:
+    → SHAP values, bias detection
+
+- SageMaker Debugger
+  - Monitors tensors during training
+  - Use to detect overfitting, anomalies, and training issues
+  - Exam clue:
+    → “monitor tensors during training”
+
+- SageMaker Experiments
+  - Tracks experiments, runs, and parameters
+  - Use to compare models and training attempts
+  - Exam clue:
+    → ML tracking / versioning
+
+- SageMaker Model Registry
+  - Stores and manages model versions
+  - Use for model approval / rejection and lifecycle management
+  - Exam clue:
+    → “approve/reject models”
+
+---
+
+DEPLOYMENT / INFERENCE
+
+- SageMaker Endpoints
+  - Real-time inference
+  - Use for low-latency predictions
+  - Exam clue:
+    → “millisecond response”
+
+- Batch Transform
+  - Batch inference
+  - Use for large offline prediction jobs
+  - Exam trap:
+    → not real-time
+
+- Async Inference
+  - Asynchronous prediction
+  - Use for long-running inference or large payloads
+  - Exam clue:
+    → “queue-based inference”
+
+- Serverless Inference
+  - Inference without managing servers
+  - Use for sporadic / unpredictable traffic
+  - Exam trap:
+    → cold starts
+
+- Multi-Model Endpoints
+  - Host many small models behind one endpoint
+  - Use for cost savings when serving multiple models
+  - Exam clue:
+    → shared endpoint
+
+- Inference Recommender
+  - Recommends best instance type for deployment
+  - Use to balance cost vs performance
+  - Exam clue:
+    → deployment optimization
+
+---
+
+EDGE / OPTIMIZATION
+
+- SageMaker Neo
+  - Compiles and optimizes models
+  - Use for deployment on edge devices
+  - Exam clue:
+    → model compilation
+
+- SageMaker Edge Manager
+  - Manages and monitors edge model deployments
+  - Use for IoT / edge ML
+  - Exam clue:
+    → monitor edge models
+
+---
+
+PIPELINES / MONITORING / FAST START
+
+- SageMaker Pipelines
+  - ML workflow automation / CI-CD
+  - Use to automate ML lifecycle steps
+  - Exam clue:
+    → “Step Functions for ML”
+
+- SageMaker Model Monitor
+  - Monitors deployed models
+  - Use for drift detection and data quality checks
+  - Exam clue:
+    → “data drift / concept drift”
+
+- SageMaker JumpStart
+  - Prebuilt models and solution templates
+  - Use for fast deployment of pretrained models
+  - Exam clue:
+    → “foundation models/templates”
+
+---
+
+MENTAL MODEL
+
+- Build environment → Studio / Notebook / Canvas
+- Prepare data → Processing / Data Wrangler / Feature Store / Ground Truth
+- Train model → Training Jobs / Autopilot / Tuning / Distributed / Spot
+- Trust & track → Clarify / Debugger / Experiments / Model Registry
+- Deploy → Endpoints / Batch / Async / Serverless / Multi-Model
+- Optimize edge → Neo / Edge Manager
+- Automate & monitor → Pipelines / Model Monitor / Inference Recommender / JumpStart
+
+---
+
+EXAM TRAPS
+
+- Choosing Endpoints for batch scoring → ❌ use Batch Transform
+- Choosing Batch Transform for low-latency API predictions → ❌ use Endpoints
+- Choosing Serverless when latency must be consistent → watch for cold starts
+- Confusing Clarify vs Model Monitor
+  - Clarify = bias/explainability
+  - Model Monitor = drift / deployed model monitoring
+- Confusing Experiments vs Model Registry
+  - Experiments = compare runs
+  - Registry = manage approved model versions
+- Confusing Studio vs Canvas
+  - Studio = builder/dev environment
+  - Canvas = no-code business tool
+
+---
+
+SUMMARY:
+Choose SageMaker tools by lifecycle stage:
+- prepare data
+- train/tune
+- debug/track
+- deploy
+- monitor
+- optimize
+
+KEY IDEA:
+👉 “In AWS exams, SageMaker questions are usually service-matching questions.”","sagemaker-algo","Medium"
